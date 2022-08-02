@@ -7,9 +7,8 @@ ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
 
 class Team:
-    ship_list = []
-
     def __init__(self):
+        self.ship_list = []
         # Добавление кораблей в команду
         for count in range(5):
             rand_int = randint(0, 4)
@@ -24,7 +23,7 @@ class Team:
 # Инициализация команд
 team_1 = Team()
 team_2 = Team()
-
+print(team_1, team_2)
 # Вывод игровых объектов в консоль
 for i in range(5):
     # Данные корабля первой команды
