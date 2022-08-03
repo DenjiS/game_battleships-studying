@@ -1,26 +1,36 @@
-from ship_modules import Weapon, Storage, Shield, Team
+from ship_modules import *
 
 
 class ShipBuilder(type):
     def __init__(cls, name, bases, attrs):
         cls.name = name
-        cls.health = cls.MAX_HEALTH
+        cls.health = Health(cls.MAX_HEALTH)
         cls.armor = cls.MAX_ARMOR
 
 
 class Ship(metaclass=ShipBuilder):
     MAX_HEALTH = None
     MAX_ARMOR = None
+    dead = False
 
 
 class BattleShip(Ship):
-    weapon = Weapon()
+    @property
+    def weapon(self):
+        return Weapon(dmg=self.DAMAGE)
 
 
 class TransportShip(Ship):
-    storage = Storage()
+    @property
+    def storage(self):
+        return Storage(cargo=self.CARGO)
 
 
 class SupportShip(Ship):
-    shield = Shield()
-    team = Team()
+    @property
+    def shield(self):
+        return Shield(shield=self.SHIELD)
+
+    @property
+    def rep_team(self):
+        return RepairTeam(size=self.TEAM)
