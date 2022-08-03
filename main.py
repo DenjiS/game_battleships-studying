@@ -64,8 +64,9 @@ class Battlefield:
                 space_1 = 15 - len(team_1_ship_name)
                 team_1_ship_hp = f'{team_1.ships[i].health}\\{team_1.ships[i].MAX_HEALTH}'
             except AttributeError:
-                team_1_ship_name = '**********'
-                team_1_ship_hp = '**********'
+                team_1_ship_name = '********'
+                space_1 = 2
+                team_1_ship_hp = '********'
             # Пространство между полями команд
             space_between = 40 - len(team_1_ship_hp)
             # Данные корабля второй команды
@@ -74,8 +75,9 @@ class Battlefield:
                 space_2 = 15 - len(team_2_ship_name)
                 team_2_ship_hp = f'{team_2.ships[i].health}\\{team_2.ships[i].MAX_HEALTH}'
             except AttributeError:
-                team_2_ship_name = '**********'
-                team_2_ship_hp = '**********'
+                team_2_ship_name = '********'
+                space_2 = 2
+                team_2_ship_hp = '********'
             # Вывод строки
             print(team_1_ship_name + '_' * space_1 + team_1_ship_hp +
                   ' ' * space_between +
