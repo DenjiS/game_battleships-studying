@@ -14,8 +14,8 @@ class Ship(metaclass=ShipBuilder):
     MAX_ARMOR = None
     dead = False
 
-    def __init__(self, team):
-        self.name = team.color + self.name + Style.RESET_ALL
+    def __init__(self, team, num):
+        self.name = team.color + self.name + f'_{num}' + Style.RESET_ALL
 
 
 class BattleShip(Ship):
@@ -29,7 +29,6 @@ class BattleShip(Ship):
             print(f'{self.name} : shoot --> {target.name}')
             if target.dead:
                 print(f'{target.name} destroyed')
-                target = None
         else:
             print(f'{self.hame} : shoot --> missed')
 
