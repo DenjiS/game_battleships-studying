@@ -1,55 +1,52 @@
 from ships import *
 from random import randint
 from time import sleep
+from colorama import Fore
 import os
+
 
 # Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
 
 class Team:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, name, color):
+        self.color = color
+        self.name = color + name
         self.ships = []
         # Добавление кораблей в команду
         for count in range(5):
             rand_int = randint(0, 4)
             # Создание объекта корабля
-            append_ship = ship_types_list[rand_int]()
+            append_ship = ship_types_list[rand_int](self)
             self.ships.append(append_ship)
 
 
 class Battlefield:
     def __init__(self):
         # Инициализация команд
-        self.team_1 = Team('A')
-        self.team_2 = Team('B')
-
-    @staticmethod
-    def shoot(i, team_shooter, team_victim):
-        if hasattr(team_shooter.ships[i], 'weapon'):
-            rand_int = randint(0, 4)
-            team_victim.ships[rand_int].health -= team_shooter.ships[i].weapon.dmg
+        self.team_1 = Team('RED', Fore.RED)
+        self.team_2 = Team('BLUE', Fore.BLUE)
 
     def mainloop(self):
         while True:
             clear = lambda: os.system('cls')
             clear()
             self.screen(self.team_1, self.team_2)
-            sleep(1)
+            sleep(0.1)
             for i in range(5):
-                try:
-                    self.shoot(i, self.team_1, self.team_2)
-                    if self.team_2.ships[i].dead:
-                        self.team_2.ships[i] = None
-                except AttributeError:
-                    pass
-                try:
-                    self.shoot(i, self.team_2, self.team_1)
-                    if self.team_1.ships[i].dead:
-                        self.team_1.ships[i] = None
-                except AttributeError:
-                    pass
+                # Корабль первой команды
+                ship = self.team_1.ships[i]
+                enemy = self.team_2.ships[randint(0, 4)]
+                if hasattr(ship, 'weapon'):
+                    ship.shoot(target=enemy)
+                    sleep(0.5)
+                # Корабль второй команды
+                ship = self.team_2.ships[i]
+                enemy = self.team_1.ships[randint(0, 4)]
+                if hasattr(ship, 'weapon'):
+                    ship.shoot(target=enemy)
+                    sleep(0.5)
 
     @staticmethod
     def screen(team_1, team_2):
@@ -57,6 +54,7 @@ class Battlefield:
         Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
         :return: Визуальное отображение игры в консоли
         """
+        print('\n')
         for i in range(5):
             # Данные корабля первой команды
             try:

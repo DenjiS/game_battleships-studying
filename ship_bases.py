@@ -1,4 +1,5 @@
 from ship_modules import *
+from colorama import Style
 
 
 class ShipBuilder(type):
@@ -13,11 +14,24 @@ class Ship(metaclass=ShipBuilder):
     MAX_ARMOR = None
     dead = False
 
+    def __init__(self, team):
+        self.name = team.color + self.name + Style.RESET_ALL
+
 
 class BattleShip(Ship):
     @property
     def weapon(self):
         return Weapon(dmg=self.DAMAGE)
+
+    def shoot(self, target=None):
+        if target:
+            target.health -= self.weapon.dmg
+            print(f'{self.name} : shoot --> {target.name}')
+            if target.dead:
+                print(f'{target.name} destroyed')
+                target = None
+        else:
+            print(f'{self.hame} : shoot --> missed')
 
 
 class TransportShip(Ship):
