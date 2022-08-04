@@ -1,5 +1,5 @@
 # Ships configuration
-from ship_bases import BattleShip, TransportShip, SupportShip
+from ship_bases import *
 
 
 class Jet(BattleShip):
