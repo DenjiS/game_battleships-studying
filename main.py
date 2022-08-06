@@ -4,7 +4,6 @@ from time import sleep
 from colorama import Fore, Style
 import os
 
-
 # Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
@@ -54,38 +53,32 @@ class Battlefield:
         Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
         :return: Визуальное отображение игры в консоли
         """
-        print('\n')
-        space = 65 - len(team_1.name)
-        death_string = '*' * 10 + '_' * 6 + '\\' * 8
-        print(team_1.name + ' ' * space + team_2.name)
-        for i in range(5):
-            # Данные корабля первой команды
-            ship_1 = team_1.ships[i]
-            if not ship_1.dead:
-                ship_1_name = f'{ship_1.name}'
-                space_1 = 25 - len(ship_1_name)
-                ship_1_hp = f'{ship_1.health}\\{ship_1.MAX_HEALTH}'
-                string_1 = ship_1_name + '_' * space_1 + ship_1_hp
-            elif ship_1.dead or not ship_1:
-                ship_1 = None
-                string_1 = death_string
-            # Пространство между полями команд
-            if string_1 != death_string:
-                space_between = 65 - len(string_1)
-            elif string_1 == death_string:
-                space_between = 56 - len(string_1)
-            # Данные корабля второй команды
-            ship_2 = team_2.ships[i]
-            if not ship_2.dead:
-                ship_2_name = f'{ship_2.name}'
-                space_2 = 25 - len(ship_2_name)
-                ship_2_hp = f'{ship_2.health}\\{ship_2.MAX_HEALTH}'
-                string_2 = ship_2_name + ('_' * space_2) + ship_2_hp
-            elif ship_2.dead or not ship_2:
-                ship_2 = None
-                string_2 = death_string
 
-            print(string_1 + Style.RESET_ALL + ' ' * space_between + string_2)
+        def ship_field(ship):
+            if not ship.dead:
+                ship_name = f'{ship.name}'
+                space = 25 - len(ship_name)
+                ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}'
+                return ship_name + '_' * space + ship_hp + Style.RESET_ALL
+            elif ship.dead or not ship:
+                ship = None
+                return death_string
+
+        space_team = 65 - len(team_1.name)
+        death_string = '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL
+
+        print('\n')
+        print(team_1.name + ' ' * space_team + team_2.name)
+        for i in range(5):
+            ship_1, ship_2 = team_1.ships[i], team_2.ships[i]
+            string_1, string_2 = ship_field(ship_1), ship_field(ship_2)
+            # Colorama problem
+            if not ship_1.dead:
+                space = 65 - len(string_1)
+            elif ship_1.dead:
+                space = 56 - len(string_1)
+
+            print(string_1 + ' ' * space + string_2)
 
 
 if __name__ == '__main__':
