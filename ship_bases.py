@@ -27,8 +27,8 @@ class BattleShip(Ship):
 
 
 class TransportShip(Ship):
-    def __init__(self, team, num):
-        super().__init__(team, num)
+    def __init__(self, *args):
+        super().__init__(*args)
         self.storage = Storage(cargo=self.CARGO)
 
 
@@ -36,8 +36,8 @@ class SupportShip(Ship):
     SHIELD = None
     TEAM = None
 
-    def __init__(self, team, num):
-        super().__init__(team, num)
+    def __init__(self, *args):
+        super().__init__(*args)
         if self.SHIELD:
             self.shield = Shield(shield=self.SHIELD)
         if self.TEAM:
