@@ -37,11 +37,11 @@ class Battlefield:
                 self.actions(i, self.team_2, self.team_1)
 
     @staticmethod
-    def actions(num, team_1, team_2):
-        ship = team_1.ships[num]
+    def actions(num, team_ally, team_enemy):
+        ship = team_ally.ships[num]
 
         # shoot
-        enemy = team_2.ships[randint(0, 4)]
+        enemy = team_enemy.ships[randint(0, 4)]
         if hasattr(ship, 'weapon'):
             ship.shoot(target=enemy)
 
