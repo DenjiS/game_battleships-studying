@@ -12,8 +12,8 @@ class Team:
     def __init__(self, name, color):
         self.color = color
         self.name = color + name + Style.RESET_ALL
+
         self.ships = []
-        # Добавление кораблей в команду
         for count in range(5):
             rand_int = randint(0, 4)
             # Создание объекта корабля
@@ -58,26 +58,24 @@ class Battlefield:
                 ship_name = f'{ship.name}'
                 space_print = 25 - len(ship_name)
                 ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}'
-                return ship_name + '_' * space_print + ship_hp + Style.RESET_ALL
+                return ship_name + '_' * space_print + ship_hp
             elif not ship:
                 return death_string
 
-        space_team = 61 - len(team_1.name)
-        death_string = '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL
+        death_string = Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL
+
+        def space(obj):
+            return ' ' * (65 - len(obj))
 
         # Отрисовка
         print('\n')
-        print(team_1.name + ' ' * space_team + team_2.name)
+        print(team_1.name + space(team_1.name) + team_2.name)
+
         for i in range(5):
             ship_1, ship_2 = team_1.ships[i], team_2.ships[i]
             string_1, string_2 = ship_field(ship_1), ship_field(ship_2)
-            # Colorama problem
-            if ship_1:
-                space = 65 - len(string_1)
-            elif not ship_1:
-                space = 56 - len(string_1)
 
-            print(string_1 + ' ' * space + string_2)
+            print(string_1 + space(string_1) + string_2)
 
 
 if __name__ == '__main__':
