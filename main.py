@@ -33,18 +33,19 @@ class Battlefield:
             self.screen(self.team_1, self.team_2)
             sleep(0.1)
             for i in range(5):
-                # Корабль первой команды
-                ship = self.team_1.ships[i]
-                enemy = self.team_2.ships[randint(0, 4)]
-                if hasattr(ship, 'weapon'):
-                    ship.shoot(target=enemy)
-                    sleep(0.5)
-                # Корабль второй команды
-                ship = self.team_2.ships[i]
-                enemy = self.team_1.ships[randint(0, 4)]
-                if hasattr(ship, 'weapon'):
-                    ship.shoot(target=enemy)
-                    sleep(0.5)
+                self.actions(i, self.team_1, self.team_2)
+                self.actions(i, self.team_2, self.team_1)
+
+    @staticmethod
+    def actions(num, team_1, team_2):
+        ship = team_1.ships[num]
+
+        # shoot
+        enemy = team_2.ships[randint(0, 4)]
+        if hasattr(ship, 'weapon'):
+            ship.shoot(target=enemy)
+
+        sleep(0.5)
 
     @staticmethod
     def screen(team_1, team_2):
@@ -55,9 +56,9 @@ class Battlefield:
 
         def ship_field(ship):
             if ship:
-                space_print = 25 - len(ship.name)
+                space_ship_field = 25 - len(ship.name)
                 ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}'
-                return ship.name + '_' * space_print + ship_hp
+                return ship.name + '_' * space_ship_field + ship_hp
             elif not ship:
                 return death_string
 
