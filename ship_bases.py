@@ -4,6 +4,7 @@ from colorama import Style
 
 class ShipBuilder(type):
     def __init__(cls, name, bases, attrs):
+        super().__init__(name, bases, attrs)
         cls.cls_name = name
 
 
@@ -17,26 +18,18 @@ class Ship(metaclass=ShipBuilder):
 
 
 class BattleShip(Ship):
-    @property
-    def weapon(self):
-        return Weapon(dmg=self.DAMAGE)
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.weapon = Weapon(dmg=self.DAMAGE)
 
     def shoot(self, target=None):
-        if target:
-            target.health = target.health - self.weapon.dmg
-            print(f'{self.name} : shoot --> {target.name}')
-            if target.health <= 0:
-                print(f'{target.name} destroyed')
-                target.team.ships[target.num] = None
-
-        else:
-            print(f'{self.name} : shoot --> missed')
+        self.weapon.shoot(self, target)
 
 
 class TransportShip(Ship):
-    @property
-    def storage(self):
-        return Storage(cargo=self.CARGO)
+    def __init__(self, team, num):
+        super().__init__(team, num)
+        self.storage = Storage(cargo=self.CARGO)
 
 
 class SupportShip(Ship):
