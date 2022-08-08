@@ -55,10 +55,9 @@ class Battlefield:
 
         def ship_field(ship):
             if ship:
-                ship_name = f'{ship.name}'
-                space_print = 25 - len(ship_name)
+                space_print = 25 - len(ship.name)
                 ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}'
-                return ship_name + '_' * space_print + ship_hp
+                return ship.name + '_' * space_print + ship_hp
             elif not ship:
                 return death_string
 
