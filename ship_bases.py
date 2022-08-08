@@ -33,10 +33,12 @@ class TransportShip(Ship):
 
 
 class SupportShip(Ship):
-    @property
-    def shield(self):
-        return Shield(shield=self.SHIELD)
+    SHIELD = None
+    TEAM = None
 
-    @property
-    def rep_team(self):
-        return RepairTeam(size=self.TEAM)
+    def __init__(self, team, num):
+        super().__init__(team, num)
+        if self.SHIELD:
+            self.shield = Shield(shield=self.SHIELD)
+        if self.TEAM:
+            self.repair_team = RepairTeam(size=self.TEAM)

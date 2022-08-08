@@ -20,6 +20,10 @@ class Cruiser(BattleShip, SupportShip):
     DAMAGE = 30
     SHIELD = 10
 
+    def __init__(self, *args):
+        BattleShip.__init__(self, *args)
+        SupportShip.__init__(self, *args)
+
 
 class CargoShip(TransportShip):
     MAX_HEALTH = 2000
