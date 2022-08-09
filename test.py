@@ -28,3 +28,9 @@ class CruiserTest(TestCase):
 
     def test_has_repair_team(self):
         self.assertFalse(hasattr(self.cruiser1, 'repair_team'))
+
+    def test_armor_reduction(self):
+        print(f'init-armor: {self.cruiser2.armor}')
+        for i in range(6):
+            self.cruiser1.shoot(self.cruiser2)
+            print(f'after-hit-n{i + 1}-armor: {self.cruiser2.armor}')
