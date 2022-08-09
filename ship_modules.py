@@ -1,16 +1,16 @@
 # Battle modules
 class Weapon:
-    def __init__(self, dmg=None):
+    def __init__(self, dmg):
         self.cd_count = 0
         self.dmg = dmg
 
-    def shoot(self, ship, target):
+    def shoot(self, ship, target, cd=10):
         if target:
             # Armor reduction ability
             if self.cd_count <= 0 and target.armor > 0:
                 target.armor = target.armor - 1
                 print(f'{ship.name} : break_armor --> {target.name}')
-                self.cd_count = 10
+                self.cd_count = cd  # ability cooldown
 
             # Damage
             target.health = target.health - (self.dmg - target.armor)
@@ -29,17 +29,17 @@ class Weapon:
 
 # Transport modules
 class Storage:
-    def __init__(self, cargo=None):
+    def __init__(self, cargo):
         self.cargo = cargo
         self.size = cargo
 
 
 # Support modules
 class Shield:
-    def __init__(self, shield=None):
+    def __init__(self, shield):
         self.shield = shield
 
 
 class RepairTeam:
-    def __init__(self, size=None):
+    def __init__(self, size):
         self.size = size

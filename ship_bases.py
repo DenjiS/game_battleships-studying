@@ -5,14 +5,14 @@ from colorama import Style
 class ShipBuilder(type):
     def __init__(cls, name, bases, attrs):
         super().__init__(name, bases, attrs)
-        cls.cls_name = name
+        cls.CLS_NAME = name
 
 
 class Ship(metaclass=ShipBuilder):
     def __init__(self, team, num):
         self.team = team
         self.num = num
-        self.name = team.color + self.cls_name + f'_{num}' + Style.RESET_ALL
+        self.name = team.color + self.CLS_NAME + f'_{num}' + Style.RESET_ALL
         self.health = self.MAX_HEALTH
         self.armor = self.MAX_ARMOR
 
@@ -20,16 +20,16 @@ class Ship(metaclass=ShipBuilder):
 class BattleShip(Ship):
     def __init__(self, *args):
         super().__init__(*args)
-        self.weapon = Weapon(dmg=self.DAMAGE)
+        self.weapon = Weapon(self.DAMAGE)
 
-    def shoot(self, target=None):
+    def shoot(self, target):
         self.weapon.shoot(self, target)
 
 
 class TransportShip(Ship):
     def __init__(self, *args):
         super().__init__(*args)
-        self.storage = Storage(cargo=self.CARGO)
+        self.storage = Storage(self.CARGO)
 
 
 class SupportShip(Ship):
@@ -39,6 +39,6 @@ class SupportShip(Ship):
     def __init__(self, *args):
         super().__init__(*args)
         if self.SHIELD:
-            self.shield = Shield(shield=self.SHIELD)
+            self.shield = Shield(self.SHIELD)
         if self.TEAM:
-            self.repair_team = RepairTeam(size=self.TEAM)
+            self.repair_team = RepairTeam(self.TEAM)

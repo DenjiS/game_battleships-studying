@@ -43,7 +43,7 @@ class Battlefield:
         # shoot
         enemy = team_enemy.ships[randint(0, 4)]
         if hasattr(ship, 'weapon'):
-            ship.shoot(target=enemy)
+            ship.shoot(enemy)
 
         sleep(0.5)
 
