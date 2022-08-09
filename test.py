@@ -14,11 +14,15 @@ class ShootTest(TestCase):
         self.jet1.shoot(self.jet2)
         self.assertEqual(90, self.jet2.health)
 
-    def test_kill(self):
+    def test_kill(self, ship1, ship2):
         # Убийство удалением из команды
-        for i in range(10):
-            self.jet1.shoot(self.jet2)
-        self.assertEqual(None, self.team2.ships[0])
+        ship1 = self.jet1
+        ship2 = self.jet2
+        for i in range(int(ship1.MAX_HEALTH / ship2.DAMAGE)):
+            ship1.shoot(ship2)
+            expected_health = ship1.MAX_HEALTH - 10 * (i + 1)
+            self.assertEqual(expected_health, ship2.health, msg=f'enemy HP must be {expected_health} after {i + 1} shoot')
+        self.assertEqual(None, self.team2.ships[0], msg=f'enemy ship must be deleted from enemy team list')
 
 
 class CruiserTest(TestCase):
