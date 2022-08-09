@@ -24,8 +24,8 @@ class Cruiser(BattleShip, SupportShip):
         BattleShip.__init__(self, *args)
         SupportShip.__init__(self, *args)
 
-    def shoot(self, target, cd=5):
-        self.weapon.shoot(self, target)
+    def shoot(self, target):
+        self.weapon.shoot(self, target, cd=5)
 
 
 class CargoShip(TransportShip):
