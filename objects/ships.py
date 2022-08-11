@@ -1,5 +1,5 @@
 # Ships configuration
-from ship_bases import *
+from objects.ship_bases import *
 
 
 class Jet(BattleShip):

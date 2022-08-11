@@ -1,4 +1,4 @@
-from ship_modules import *
+from objects.ship_modules import *
 from colorama import Style
 
 

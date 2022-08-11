@@ -11,7 +11,7 @@ class Weapon:
             target.health = target.health - (self.dmg - target.armor)
             print(f'{ship.name} : shoot --> {target.name}')
 
-            # Armor reduction ability
+            # Armor reduction -- ability
             if self.cd_count <= 0 and target.armor > 0:
                 target.armor = target.armor - 1
                 print(f'{ship.name} : break_armor --> {target.name}')
@@ -22,6 +22,7 @@ class Weapon:
                 print(f'{target.name} destroyed')
                 target.team.ships[target.num] = None
 
+            # Miss
         else:
             print(f'{ship.name} : shoot --> missed')
 

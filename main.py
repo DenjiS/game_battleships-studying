@@ -1,5 +1,5 @@
-from ships import *
-from random import randint
+from objects.ships import *
+from random import choice
 from time import sleep
 from colorama import Fore, Style
 import os
@@ -14,10 +14,9 @@ class Team:
         self.name = color + name + Style.RESET_ALL
 
         self.ships = []
-        for count in range(5):
-            rand_int = randint(0, 4)
+        for num in range(5):
             # Создание объекта корабля
-            append_ship = ship_types_list[rand_int](self, count)
+            append_ship = choice(ship_types_list)(self, num)
             self.ships.append(append_ship)
 
 
@@ -41,7 +40,7 @@ class Battlefield:
         ship = team_ally.ships[num]
 
         # shoot
-        enemy = team_enemy.ships[randint(0, 4)]
+        enemy = choice(team_enemy.ships)
         if hasattr(ship, 'weapon'):
             ship.shoot(enemy)
 

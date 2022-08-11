@@ -1,6 +1,6 @@
 from unittest import TestCase
 from main import Team
-from ships import Jet, Cruiser
+from objects.ships import Jet, Cruiser
 from colorama import Fore
 
 
