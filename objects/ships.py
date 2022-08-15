@@ -1,5 +1,5 @@
 # Ships configuration
-from ship_bases import *
+from objects.ship_bases import *
 
 
 class Jet(BattleShip):
@@ -19,6 +19,13 @@ class Cruiser(BattleShip, SupportShip):
     MAX_ARMOR = 2
     DAMAGE = 30
     SHIELD = 10
+
+    def __init__(self, *args):
+        BattleShip.__init__(self, *args)
+        SupportShip.__init__(self, *args)
+
+    def shoot(self, target):
+        self.weapon.shoot(self, target, cd=5)
 
 
 class CargoShip(TransportShip):

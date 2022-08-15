@@ -1,50 +1,82 @@
-from ships import *
-from random import randint
+from objects.ships import *
+from random import choice
+from time import sleep
+from colorama import Fore, Style
+import os
 
 # Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
 
 class Team:
-    def __init__(self):
-        self.ship_list = []
-        # Добавление кораблей в команду
-        for count in range(5):
-            rand_int = randint(0, 4)
+    def __init__(self, name, color):
+        self.color = color
+        self.name = color + name + Style.RESET_ALL
+
+        self.ships = []
+        for num in range(5):
             # Создание объекта корабля
-            append_ship = ship_types_list[rand_int]()
-            self.ship_list.append(append_ship)
-
-    def ship(self, num):
-        return self.ship_list[num]
+            append_ship = choice(ship_types_list)(self, num)
+            self.ships.append(append_ship)
 
 
-# Инициализация команд
-team_1 = Team()
-team_2 = Team()
+class Battlefield:
+    def __init__(self):
+        # Инициализация команд
+        self.team_1, self.team_2 = Team('RED', Fore.RED), Team('BLUE', Fore.BLUE)
 
+    def mainloop(self):
+        while True:
+            clear = lambda: os.system('cls')
+            clear()
+            self.screen(self.team_1, self.team_2)
+            sleep(0.1)
+            for i in range(5):
+                self.actions(i, self.team_1, self.team_2)
+                self.actions(i, self.team_2, self.team_1)
 
-def screen():
-    """
-    Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
-    :return: Визуальное отображение игры в консоли
-    """
-    for i in range(5):
-        # Данные корабля первой команды
-        team_1_ship_name = f'{team_1.ship(i).name}'
-        space_1 = 15 - len(team_1_ship_name)
-        team_1_ship_hp = f'{team_1.ship(i).health}\\{team_1.ship(i).MAX_HEALTH}'
-        # Пространство между полями команд
-        space_between = 40 - len(team_1_ship_hp)
-        # Данные корабля второй команды
-        team_2_ship_name = f'{team_2.ship(i).name}'
-        space_2 = 15 - len(team_2_ship_name)
-        team_2_ship_hp = f'{team_2.ship(i).health}\\{team_2.ship(i).MAX_HEALTH}'
-        # Вывод строки
-        print(team_1_ship_name + '_' * space_1 + team_1_ship_hp +
-              ' ' * space_between +
-              team_2_ship_name + '_' * space_2 + team_2_ship_hp)
+    @staticmethod
+    def actions(num, team_ally, team_enemy):
+        ship = team_ally.ships[num]
+
+        # shoot
+        enemy = choice(team_enemy.ships)
+        if hasattr(ship, 'weapon'):
+            ship.shoot(enemy)
+
+        sleep(0.5)
+
+    @staticmethod
+    def screen(team_1, team_2):
+        """
+        Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
+        :return: Визуальное отображение игры в консоли
+        """
+
+        def ship_field(ship):
+            if ship:
+                space_ship_field = 25 - len(ship.name)
+                ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}'
+                return ship.name + '_' * space_ship_field + ship_hp
+            elif not ship:
+                return death_string
+
+        death_string = Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL
+
+        def space(obj):
+            return ' ' * (65 - len(obj))
+
+        # Отрисовка
+        print('\n')
+        print(team_1.name + space(team_1.name) + team_2.name)
+
+        for i in range(5):
+            ship_1, ship_2 = team_1.ships[i], team_2.ships[i]
+            string_1, string_2 = ship_field(ship_1), ship_field(ship_2)
+
+            print(string_1 + space(string_1) + string_2)
 
 
 if __name__ == '__main__':
-    screen()
+    btf = Battlefield()
+    btf.mainloop()
