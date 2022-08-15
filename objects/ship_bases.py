@@ -1,5 +1,6 @@
 from objects.ship_modules import *
 from colorama import Style
+from random import random
 
 
 class ShipBuilder(type):
@@ -18,12 +19,21 @@ class Ship(metaclass=ShipBuilder):
 
 
 class BattleShip(Ship):
+    HIT_CHANCE = 0.85
+
     def __init__(self, *args):
         super().__init__(*args)
         self.weapon = Weapon(self.DAMAGE)
 
     def shoot(self, target):
         self.weapon.shoot(self, target)
+
+    def take_enemy(self, enemy):
+        roll = random()
+        if roll <= self.HIT_CHANCE:
+            self.shoot(enemy)
+        else:
+            self.shoot(None)
 
 
 class TransportShip(Ship):

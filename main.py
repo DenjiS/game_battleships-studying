@@ -68,16 +68,16 @@ class Battlefield:
 
             print(string_1 + space(string_1) + string_2)
 
-    @staticmethod
-    def actions(num, team_ally, team_enemy):
+    def actions(self, num, team_ally, team_enemy):
         ship = team_ally.ships[num]
 
-        # shoot
-        enemy = choice(team_enemy.ships)
         if hasattr(ship, 'weapon'):
-            ship.shoot(enemy)
-
-        sleep(0.5)
+            if any(team_enemy.ships):
+                enemy = choice(team_enemy.ships)
+                if enemy:
+                    ship.take_enemy(enemy)
+                else:
+                    self.actions(num, team_ally, team_enemy)
 
 
 if __name__ == '__main__':
