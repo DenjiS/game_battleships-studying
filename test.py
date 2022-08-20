@@ -1,4 +1,5 @@
 from unittest import TestCase
+from math import ceil
 from main import Team
 from objects.ships import *
 from colorama import Fore
@@ -15,7 +16,7 @@ class ShootTest(TestCase):
         self.team1.ships[0], self.team2.ships[0] = self.jet1, self.jet2
 
     def test_shoot(self):
-        custom_log('test_shoot')
+        custom_log('test_shoot')  # log
         self.jet1.shoot(self.jet2)
         self.assertEqual(90, self.jet2.health)
 
@@ -24,7 +25,7 @@ class ShootTest(TestCase):
         shooter, target = self.team1.ships[0], self.team2.ships[0]
         shooter.armor, target.armor = 0, 0
 
-        shots_needed = int(target.MAX_HEALTH / shooter.DAMAGE) + 1
+        shots_needed = ceil(target.MAX_HEALTH / shooter.DAMAGE)
         for i in range(shots_needed):
             shooter.shoot(target)
             expected_health = target.MAX_HEALTH - (shooter.DAMAGE * (i + 1))
@@ -39,10 +40,10 @@ class ShootTest(TestCase):
         ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
         shooter_list = (i for i in ship_types_list if hasattr(i(self.team1, 0), 'weapon'))
         for shooter in shooter_list:
-            custom_log(f'SHOOTER: {shooter.CLS_NAME}')
+            custom_log(f'SHOOTER: {shooter.CLS_NAME}')  # log
             for target in ship_types_list:
                 self.team1.ships[0], self.team2.ships[0] = shooter(self.team1, 0), target(self.team2, 0)
-                custom_log(self.team1.ships[0].CLS_NAME + ' ' + self.team2.ships[0].CLS_NAME)
+                custom_log(self.team1.ships[0].CLS_NAME + ' ' + self.team2.ships[0].CLS_NAME)  # log
                 self.test_kill()
 
 
@@ -55,7 +56,7 @@ class CruiserTest(TestCase):
         self.assertFalse(hasattr(self.cruiser1, 'repair_team'))
 
     def test_cruiser_weapon_ability(self):
-        custom_log('test_cruiser_weapon_ability')
+        custom_log('test_cruiser_weapon_ability')  # log
         self.assertEqual(2, self.cruiser2.armor, msg='initial armor of the enemy Cruiser must be 2')
 
         self.cruiser1.shoot(self.cruiser2)  # shot 1 : first use of ability
