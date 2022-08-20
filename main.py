@@ -20,7 +20,7 @@ class Team:
             self.ships.append(append_ship)
 
 
-def cls():
+def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
@@ -41,22 +41,28 @@ class Battlefield:
     def __init__(self, team_1, team_2):
         # Инициализация команд
         self.team_1, self.team_2 = team_1, team_2
+        self.running = True
 
     def mainloop(self):
         while True:
+            # Очистка CLI
+            clear_screen()
+
             self.screen()
             sleep(0.1)
+
             for i in range(5):
                 self.actions(i, self.team_1, self.team_2)
                 self.actions(i, self.team_2, self.team_1)
+
+            if not self.running:
+                break
 
     def screen(self):
         """
         Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
         :return: Визуальное отображение игры в консоли
         """
-        # Очистка CLI
-        cls()
 
         # Отрисовка
         print('\n')
@@ -79,6 +85,15 @@ class Battlefield:
                     sleep(0.5)
                 else:
                     self.actions(num, team_ally, team_enemy)
+            else:
+                self.endgame(team_ally)
+
+    def endgame(self, winner):
+        clear_screen()
+        print('\n')
+        print(f'{winner.name} is winner')
+        self.screen()
+        self.running = False
 
 
 if __name__ == '__main__':
