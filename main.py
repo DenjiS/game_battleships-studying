@@ -25,10 +25,18 @@ def clear_screen():
 
 
 def space(obj):
+    """Метод для формирования ровной колонки правой команды при отображении Battlefield.screen;
+    :param obj: str - текст левой команды (ship_field
+    :return: str - необходимое кол-во пробелов перед текстом правой команды
+    """
     return ' ' * (65 - len(obj))
 
 
 def ship_field(ship):
+    """Поле корабля для Battlefield.screen;
+    :param ship: obj - объект корабля
+    :return: str - название, здоровье, макс. здоровье
+    """
     if ship:
         space_ship_field = 25 - len(ship.name)
         ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}'
@@ -77,14 +85,14 @@ class Battlefield:
     def actions(self, num, team_ally, team_enemy):
         ship = team_ally.ships[num]
 
-        if hasattr(ship, 'weapon'):
-            if any(team_enemy.ships):
+        if any(team_enemy.ships):
+            if hasattr(ship, 'weapon'):
                 targets = [i for i in team_enemy.ships if i is not None]
                 enemy = choice(targets)
                 ship.take_enemy(enemy)
                 sleep(0.5)
-            else:
-                self.endgame(team_ally)
+        else:
+            self.endgame(team_ally)
 
     def endgame(self, winner):
         clear_screen()
