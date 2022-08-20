@@ -76,9 +76,9 @@ class Battlefield:
                 enemy = choice(team_enemy.ships)
                 if enemy:
                     ship.take_enemy(enemy)
+                    sleep(0.5)
                 else:
                     self.actions(num, team_ally, team_enemy)
-        sleep(0.5)
 
 
 if __name__ == '__main__':
