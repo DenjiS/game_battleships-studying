@@ -79,12 +79,10 @@ class Battlefield:
 
         if hasattr(ship, 'weapon'):
             if any(team_enemy.ships):
-                enemy = choice(team_enemy.ships)
-                if enemy:
-                    ship.take_enemy(enemy)
-                    sleep(0.5)
-                else:
-                    self.actions(num, team_ally, team_enemy)
+                targets = [i for i in team_enemy.ships if i is not None]
+                enemy = choice(targets)
+                ship.take_enemy(enemy)
+                sleep(0.5)
             else:
                 self.endgame(team_ally)
 
