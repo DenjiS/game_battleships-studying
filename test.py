@@ -44,7 +44,7 @@ class CruiserTest(TestCase):
             self.assertEqual(1, self.cruiser2.armor)
 
         self.cruiser1.shoot(self.cruiser2)   # shoot 7 : second use of ability
-        self.assertEqual(0, self.cruiser2.armor, msg='after 5 hits ability must be reloaded')
+        self.assertEqual(0, self.cruiser2.armor, msg='after 1+5 hits ability must be reloaded')
 
         for i in range(5):   # shoot 8-12 : ability cooldown
             self.cruiser1.shoot(self.cruiser2)
