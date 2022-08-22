@@ -20,63 +20,89 @@ class Team:
             self.ships.append(append_ship)
 
 
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def space(obj):
+    """Метод для формирования ровной колонки правой команды при отображении Battlefield.screen;
+    :param obj: str - текст левой команды
+    :return: str - необходимое кол-во пробелов перед текстом правой команды
+    """
+    return ' ' * (65 - len(obj))
+
+
+def ship_field(ship):
+    """Поле корабля для Battlefield.screen;
+    :param ship: obj - объект корабля
+    :return: str - название, здоровье, макс. здоровье
+    """
+    if ship:
+        space_ship_field = 25 - len(ship.name)
+        ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}'
+        return ship.name + '_' * space_ship_field + ship_hp
+    elif not ship:
+        return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # Death string
+
+
 class Battlefield:
-    def __init__(self):
+    def __init__(self, team_1, team_2):
         # Инициализация команд
-        self.team_1, self.team_2 = Team('RED', Fore.RED), Team('BLUE', Fore.BLUE)
+        self.team_1, self.team_2 = team_1, team_2
+        self.running = True
 
     def mainloop(self):
         while True:
-            clear = lambda: os.system('cls')
-            clear()
-            self.screen(self.team_1, self.team_2)
+            # Очистка CLI
+            clear_screen()
+
+            self.screen()
             sleep(0.1)
+
             for i in range(5):
                 self.actions(i, self.team_1, self.team_2)
                 self.actions(i, self.team_2, self.team_1)
 
-    @staticmethod
-    def actions(num, team_ally, team_enemy):
-        ship = team_ally.ships[num]
+            if not self.running:
+                break
 
-        # shoot
-        enemy = choice(team_enemy.ships)
-        if hasattr(ship, 'weapon'):
-            ship.shoot(enemy)
-
-        sleep(0.5)
-
-    @staticmethod
-    def screen(team_1, team_2):
+    def screen(self):
         """
         Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
         :return: Визуальное отображение игры в консоли
         """
 
-        def ship_field(ship):
-            if ship:
-                space_ship_field = 25 - len(ship.name)
-                ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}'
-                return ship.name + '_' * space_ship_field + ship_hp
-            elif not ship:
-                return death_string
-
-        death_string = Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL
-
-        def space(obj):
-            return ' ' * (65 - len(obj))
-
         # Отрисовка
         print('\n')
-        print(team_1.name + space(team_1.name) + team_2.name)
+        print(self.team_1.name + space(self.team_1.name) + self.team_2.name)
 
         for i in range(5):
-            ship_1, ship_2 = team_1.ships[i], team_2.ships[i]
+            ship_1, ship_2 = self.team_1.ships[i], self.team_2.ships[i]
             string_1, string_2 = ship_field(ship_1), ship_field(ship_2)
 
             print(string_1 + space(string_1) + string_2)
 
+    def actions(self, num, team_ally, team_enemy):
+        ship = team_ally.ships[num]
+
+        if any(team_enemy.ships):
+            if hasattr(ship, 'weapon'):
+                targets = [i for i in team_enemy.ships if i is not None]
+                enemy = choice(targets)
+                ship.take_enemy(enemy)
+                sleep(0.5)
+        else:
+            self.endgame(team_ally)
+
+    def endgame(self, winner):
+        clear_screen()
+        print('\n')
+        print(f'{winner.name} is winner')
+        self.screen()
+        self.running = False
+
 
 if __name__ == '__main__':
-    btf = Battlefield()
+    team_red, team_blue = Team('RED', Fore.RED), Team('BLUE', Fore.BLUE)
+    btf = Battlefield(team_red, team_blue)
     btf.mainloop()
