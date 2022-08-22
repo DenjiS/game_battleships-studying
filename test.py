@@ -43,7 +43,7 @@ class ShootTest(TestCase):
             custom_log(f'SHOOTER: {shooter.CLS_NAME}')  # log
             for target in ship_types_list:
                 self.team1.ships[0], self.team2.ships[0] = shooter(self.team1, 0), target(self.team2, 0)
-                custom_log(self.team1.ships[0].CLS_NAME + ' ' + self.team2.ships[0].CLS_NAME)  # log
+                custom_log(self.team1.ships[0].CLS_NAME + ' -> ' + self.team2.ships[0].CLS_NAME)  # log
                 self.test_kill()
 
 

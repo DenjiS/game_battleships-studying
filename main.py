@@ -26,7 +26,7 @@ def clear_screen():
 
 def space(obj):
     """Метод для формирования ровной колонки правой команды при отображении Battlefield.screen;
-    :param obj: str - текст левой команды (ship_field
+    :param obj: str - текст левой команды
     :return: str - необходимое кол-во пробелов перед текстом правой команды
     """
     return ' ' * (65 - len(obj))
