@@ -21,8 +21,7 @@ class Cruiser(BattleShip, SupportShip):
     SHIELD = 10
 
     def __init__(self, *args):
-        BattleShip.__init__(self, *args)
-        SupportShip.__init__(self, *args)
+        super().__init__(*args)
 
     def shoot(self, target):
         self.weapon.shoot(self, target, cd=5)
