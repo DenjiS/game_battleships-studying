@@ -19,22 +19,23 @@ class Team:
             append_ship = choice(ship_types_list)(self, num)
             self.ships.append(append_ship)
 
-
-class BattleIter:
-    def __init__(self, team):
-        self.count = -1
-        self.list = team
+            self.count = -1
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        if not any(self.list):
+        if not any(self.ships):
             raise StopIteration
         self.count += 1
-        if self.count >= len(self.list):
+        if self.count >= len(self.ships):
             self.count = 0
-        return self.list[self.count]
+        return self.ships[self.count]
+
+
+class BattleIter:
+    def __init__(self, team):
+        self.list = team
 
 
 class Battlefield:
@@ -69,20 +70,19 @@ class Battlefield:
             return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # Death string
 
     def mainloop(self):
-        iter_1 = BattleIter(self.teams[0].ships)
-        iter_2 = BattleIter(self.teams[1].ships)
-        while True:
+        while self.running:
             # Очистка CLI
             self.clear_screen()
 
             self.screen()
-            sleep(0.1)
+            sleep(0.5)
 
-            self.actions(next(iter_1), self.teams[1])
-            self.actions(next(iter_2), self.teams[0])
-
-            if not self.running:
-                break
+            for i in self.teams:
+                enemy_team = self.teams[1] if i == self.teams[0] else self.teams[0]
+                try:
+                    self.actions(next(i), enemy_team)
+                except StopIteration:
+                    self.endgame(enemy_team)
 
     def screen(self):
         """
