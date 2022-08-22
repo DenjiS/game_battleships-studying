@@ -44,6 +44,19 @@ class Battlefield:
         self.teams = team_1, team_2
         self.running = True
 
+    def mainloop(self):
+        while self.running:
+            self.clear_screen()
+            self.screen()
+            sleep(0.5)
+
+            for i in self.teams:
+                enemy_team = self.teams[1] if i == self.teams[0] else self.teams[0]
+                try:
+                    self.actions(next(i), enemy_team)
+                except StopIteration:
+                    self.endgame(enemy_team)
+
     @classmethod
     def clear_screen(cls):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -69,21 +82,6 @@ class Battlefield:
         elif not ship:
             return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # Death string
 
-    def mainloop(self):
-        while self.running:
-            # Очистка CLI
-            self.clear_screen()
-
-            self.screen()
-            sleep(0.5)
-
-            for i in self.teams:
-                enemy_team = self.teams[1] if i == self.teams[0] else self.teams[0]
-                try:
-                    self.actions(next(i), enemy_team)
-                except StopIteration:
-                    self.endgame(enemy_team)
-
     def screen(self):
         """
         Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
@@ -100,7 +98,8 @@ class Battlefield:
 
             print(string_1 + self.space(string_1) + string_2)
 
-    def actions(self, ship, team_enemy):
+    @classmethod
+    def actions(cls, ship, team_enemy):
         if hasattr(ship, 'weapon'):
             targets = [i for i in team_enemy.ships if i is not None]
             enemy = choice(targets)
