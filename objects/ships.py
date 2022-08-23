@@ -22,6 +22,7 @@ class Cruiser(BattleShip, SupportShip):
 
     def __init__(self, *args):
         super().__init__(*args)
+        self.attack_speed = 0.1
 
     def shoot(self, target):
         self.weapon.shoot(self, target, cd=5)

@@ -1,8 +1,8 @@
 from objects.ships import *
 from random import choice
-from time import sleep
 from colorama import Fore, Style
 import os
+import asyncio
 
 # Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
@@ -38,19 +38,6 @@ class Battlefield:
         # Инициализация команд
         self.teams = team_1, team_2
         self.running = True
-
-    def mainloop(self):
-        while self.running:
-            self.clear_screen()
-            self.screen()
-            sleep(0.5)
-
-            for i in self.teams:
-                enemy_team = self.teams[1] if i == self.teams[0] else self.teams[0]
-                try:
-                    self.actions(next(i), enemy_team)
-                except StopIteration:
-                    self.endgame(enemy_team)
 
     @classmethod
     def clear_screen(cls):
@@ -93,23 +80,58 @@ class Battlefield:
 
             print(string_1 + self.space(string_1) + string_2)
 
+    async def screen_loop(self):
+        while self.running:
+            self.clear_screen()
+            self.screen()
+            await asyncio.sleep(5)
+
     @classmethod
-    def actions(cls, ship, team_enemy):
-        if hasattr(ship, 'weapon'):
+    async def actions(cls, ship, team_enemy):
+        if hasattr(ship, 'weapon') and ship.reloaded:
             targets = [i for i in team_enemy.ships if i is not None]
             enemy = choice(targets)
             ship.take_enemy(enemy)
-            sleep(0.5)
+            ship.reloaded = False
+            await asyncio.sleep(ship.attack_speed)
+        if hasattr(ship, 'storage'):
+            pass
+        if hasattr(ship, 'shield'):
+            pass
+        if hasattr(ship, 'repair_team'):
+            pass
+        try:
+            ship.reloaded = True
+        except AttributeError:
+            pass
+        finally:
+            await asyncio.sleep(0)
 
-    def endgame(self, winner):
+    async def endgame(self, winner):
+        self.running = False
         self.clear_screen()
         print('\n')
         print(f'{winner.name} is winner')
         self.screen()
-        self.running = False
+        await asyncio.sleep(0)
+
+    async def battle_loop(self, team):
+        team_iter = iter(team)
+        enemy_team = self.teams[1] if team == self.teams[0] else self.teams[0]
+        for i in team_iter:
+            await self.actions(i, enemy_team)
+
+    async def main(self):
+        loop_1 = asyncio.create_task(self.battle_loop(self.teams[0]))
+        loop_2 = asyncio.create_task(self.battle_loop(self.teams[1]))
+        screen = asyncio.create_task(self.screen_loop())
+        while self.running:
+            await screen
+            await loop_1
+            await loop_2
 
 
 if __name__ == '__main__':
     team_red, team_blue = Team('RED', Fore.RED), Team('BLUE', Fore.BLUE)
     btf = Battlefield(team_red, team_blue)
-    btf.mainloop()
+    asyncio.run(btf.main())

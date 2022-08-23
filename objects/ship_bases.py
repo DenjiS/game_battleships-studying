@@ -1,6 +1,6 @@
 from objects.ship_modules import *
 from colorama import Style
-from random import random
+from random import random, uniform
 
 
 class ShipBuilder(type):
@@ -16,6 +16,7 @@ class Ship(metaclass=ShipBuilder):
         self.name = team.color + self.CLS_NAME + f'_{num}' + Style.RESET_ALL
         self.health = self.MAX_HEALTH
         self.armor = self.MAX_ARMOR
+        self.reloaded = True
 
 
 class BattleShip(Ship):
@@ -24,6 +25,7 @@ class BattleShip(Ship):
     def __init__(self, *args):
         super().__init__(*args)
         self.weapon = Weapon(self.DAMAGE)
+        self.attack_speed = uniform(0.5, 0.9)
 
     def shoot(self, target):
         self.weapon.shoot(self, target)
