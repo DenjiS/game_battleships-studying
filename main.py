@@ -33,11 +33,6 @@ class Team:
         return self.ships[self.count]
 
 
-class BattleIter:
-    def __init__(self, team):
-        self.list = team
-
-
 class Battlefield:
     def __init__(self, team_1, team_2):
         # Инициализация команд
