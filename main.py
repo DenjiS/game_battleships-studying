@@ -88,7 +88,7 @@ class Battlefield:
 
     @classmethod
     async def actions(cls, ship, team_enemy):
-        if hasattr(ship, 'weapon') and ship.reloaded:
+        if hasattr(ship, 'weapon') and ship.reloaded and team_enemy:
             targets = [i for i in team_enemy.ships if i is not None]
             enemy = choice(targets)
             ship.take_enemy(enemy)
@@ -107,28 +107,29 @@ class Battlefield:
         finally:
             await asyncio.sleep(0)
 
-    async def endgame(self, winner):
+    def endgame(self, winner):
         self.running = False
         self.clear_screen()
         print('\n')
         print(f'{winner.name} is winner')
         self.screen()
-        await asyncio.sleep(0)
 
     async def battle_loop(self, team):
-        team_iter = iter(team)
         enemy_team = self.teams[1] if team == self.teams[0] else self.teams[0]
-        for i in team_iter:
-            await self.actions(i, enemy_team)
+        while self.running:
+            if not any(team):
+                self.endgame(enemy_team)
+                break
+            for i in team:
+                await self.actions(i, enemy_team)
 
     async def main(self):
         loop_1 = asyncio.create_task(self.battle_loop(self.teams[0]))
         loop_2 = asyncio.create_task(self.battle_loop(self.teams[1]))
         screen = asyncio.create_task(self.screen_loop())
-        while self.running:
-            await screen
-            await loop_1
-            await loop_2
+        await screen
+        await loop_1
+        await loop_2
 
 
 if __name__ == '__main__':
