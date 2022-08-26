@@ -90,8 +90,9 @@ class Battlefield:
     async def actions(cls, ship, team_enemy):
         if hasattr(ship, 'weapon') and ship.reloaded and team_enemy:
             targets = [i for i in team_enemy.ships if i is not None]
-            enemy = choice(targets)
-            ship.take_enemy(enemy)
+            if targets:
+                enemy = choice(targets)
+                ship.take_enemy(enemy)
             ship.reloaded = False
             await asyncio.sleep(ship.attack_speed)
         if hasattr(ship, 'storage'):
