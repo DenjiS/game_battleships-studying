@@ -88,7 +88,7 @@ class Battlefield:
 
     @classmethod
     async def actions(cls, ship, team_enemy):
-        if hasattr(ship, 'weapon') and ship.reloaded and team_enemy:
+        if hasattr(ship, 'weapon') and ship.reloaded:
             targets = [i for i in team_enemy.ships if i is not None]
             if targets:
                 enemy = choice(targets)
