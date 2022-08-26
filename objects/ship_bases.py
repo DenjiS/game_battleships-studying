@@ -21,11 +21,12 @@ class Ship(metaclass=ShipBuilder):
 
 class BattleShip(Ship):
     HIT_CHANCE = 0.85
+    AT_SPEED = uniform(1.5, 1.9)
 
     def __init__(self, *args):
         super().__init__(*args)
         self.weapon = Weapon(self.DAMAGE)
-        self.attack_speed = uniform(0.5, 0.9)
+        self.attack_speed = self.AT_SPEED
 
     def shoot(self, target):
         self.weapon.shoot(self, target)

@@ -100,12 +100,9 @@ class Battlefield:
             pass
         if hasattr(ship, 'repair_team'):
             pass
-        try:
+        if isinstance(ship, Ship):
             ship.reloaded = True
-        except AttributeError:
-            pass
-        finally:
-            await asyncio.sleep(0)
+        await asyncio.sleep(0)
 
     def endgame(self, winner):
         self.running = False
