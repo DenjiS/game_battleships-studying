@@ -20,12 +20,11 @@ class Ship(metaclass=ShipBuilder):
 
 class BattleShip(Ship):
     HIT_CHANCE = 0.85
-    AT_SPEED = uniform(1.5, 1.9)
 
     def __init__(self, *args):
         super().__init__(*args)
         self.weapon = Weapon(self.DAMAGE)
-        self.attack_speed = self.AT_SPEED
+        self.attack_speed = self.AT_SPEED if hasattr(self, 'AT_SPEED') else uniform(1, 1.5)
 
     def shoot(self, target):
         self.weapon.shoot(self, target)
