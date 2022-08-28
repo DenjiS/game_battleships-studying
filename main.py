@@ -75,7 +75,7 @@ class Battlefield:
             self.screen()
             await asyncio.sleep(3)
 
-    async def actions(self, ship, team_enemy):
+    async def actions_loop(self, ship, team_enemy):
         while self.running and ship in ship.team.ships:
             if hasattr(ship, 'weapon'):
                 targets = [i for i in team_enemy.ships if i is not None]
@@ -105,7 +105,7 @@ class Battlefield:
         for team in self.teams:
             enemy_team = self.teams[1] if team == self.teams[0] else self.teams[0]
             for ship in team.ships:
-                actions = asyncio.create_task(self.actions(ship, enemy_team))
+                actions = asyncio.create_task(self.actions_loop(ship, enemy_team))
                 loops.append(actions)
         await asyncio.gather(*loops)
 
