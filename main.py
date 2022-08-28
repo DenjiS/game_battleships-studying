@@ -73,7 +73,7 @@ class Battlefield:
         while self.running:
             self.clear_screen()
             self.screen()
-            await asyncio.sleep(5)
+            await asyncio.sleep(3)
 
     async def actions(self, ship, team_enemy):
         while self.running and ship in ship.team.ships:
@@ -84,15 +84,13 @@ class Battlefield:
                     ship.take_enemy(enemy)
                 else:
                     self.endgame(ship.team)
-                await asyncio.sleep(ship.attack_speed)
-            else:
-                await asyncio.sleep(1)
             if hasattr(ship, 'storage'):
                 pass
             if hasattr(ship, 'shield'):
                 pass
             if hasattr(ship, 'repair_team'):
                 pass
+            await asyncio.sleep(ship.attack_speed) if hasattr(ship, 'attack_speed') else await asyncio.sleep(10)
 
     def endgame(self, winner):
         self.running = False
