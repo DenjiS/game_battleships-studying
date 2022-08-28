@@ -76,7 +76,7 @@ class Battlefield:
             await asyncio.sleep(5)
 
     async def actions(self, ship, team_enemy):
-        while self.running and ship.health > 0:
+        while self.running and ship in ship.team.ships:
             if hasattr(ship, 'weapon'):
                 targets = [i for i in team_enemy.ships if i is not None]
                 if targets:
