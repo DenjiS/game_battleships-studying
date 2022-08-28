@@ -9,12 +9,14 @@ ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
 
 class Team:
+    SIZE = 5
+
     def __init__(self, name, color):
         self.color = color
         self.name = color + name + Style.RESET_ALL
 
         self.ships = []
-        for num in range(5):
+        for num in range(self.SIZE):
             # Создание объекта корабля
             append_ship = choice(ship_types_list)(self, num)
             self.ships.append(append_ship)
@@ -61,7 +63,7 @@ class Battlefield:
         print('\n')
         print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
 
-        for i in range(len(self.teams[0].ships)):
+        for i in range(Team.SIZE):
             ship_1, ship_2 = self.teams[0].ships[i], self.teams[1].ships[i]
             string_1, string_2 = self.ship_field(ship_1), self.ship_field(ship_2)
 
@@ -74,7 +76,7 @@ class Battlefield:
             await asyncio.sleep(5)
 
     async def actions(self, ship, team_enemy):
-        while self.running:
+        while self.running and ship.health > 0:
             if hasattr(ship, 'weapon'):
                 targets = [i for i in team_enemy.ships if i is not None]
                 if targets:
@@ -82,7 +84,6 @@ class Battlefield:
                     ship.take_enemy(enemy)
                 else:
                     self.endgame(ship.team)
-                ship.reloaded = False
                 await asyncio.sleep(ship.attack_speed)
             else:
                 await asyncio.sleep(1)

@@ -16,7 +16,6 @@ class Ship(metaclass=ShipBuilder):
         self.name = team.color + self.CLS_NAME + f'_{num}' + Style.RESET_ALL
         self.health = self.MAX_HEALTH
         self.armor = self.MAX_ARMOR
-        self.reloaded = True
 
 
 class BattleShip(Ship):
