@@ -19,19 +19,6 @@ class Team:
             append_ship = choice(ship_types_list)(self, num)
             self.ships.append(append_ship)
 
-            self.count = -1
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if not any(self.ships):
-            raise StopIteration
-        self.count += 1
-        if self.count >= len(self.ships):
-            self.count = 0
-        return self.ships[self.count]
-
 
 class Battlefield:
     def __init__(self, team_1, team_2):
@@ -74,7 +61,7 @@ class Battlefield:
         print('\n')
         print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
 
-        for i in range(5):
+        for i in range(len(self.teams[0].ships)):
             ship_1, ship_2 = self.teams[0].ships[i], self.teams[1].ships[i]
             string_1, string_2 = self.ship_field(ship_1), self.ship_field(ship_2)
 
@@ -86,24 +73,25 @@ class Battlefield:
             self.screen()
             await asyncio.sleep(5)
 
-    @classmethod
-    async def actions(cls, ship, team_enemy):
-        if hasattr(ship, 'weapon') and ship.reloaded:
-            targets = [i for i in team_enemy.ships if i is not None]
-            if targets:
-                enemy = choice(targets)
-                ship.take_enemy(enemy)
-            ship.reloaded = False
-            await asyncio.sleep(ship.attack_speed)
-        if hasattr(ship, 'storage'):
-            pass
-        if hasattr(ship, 'shield'):
-            pass
-        if hasattr(ship, 'repair_team'):
-            pass
-        if isinstance(ship, Ship):
-            ship.reloaded = True
-        await asyncio.sleep(0)
+    async def actions(self, ship, team_enemy):
+        while self.running:
+            if hasattr(ship, 'weapon'):
+                targets = [i for i in team_enemy.ships if i is not None]
+                if targets:
+                    enemy = choice(targets)
+                    ship.take_enemy(enemy)
+                else:
+                    self.endgame(ship.team)
+                ship.reloaded = False
+                await asyncio.sleep(ship.attack_speed)
+            else:
+                await asyncio.sleep(1)
+            if hasattr(ship, 'storage'):
+                pass
+            if hasattr(ship, 'shield'):
+                pass
+            if hasattr(ship, 'repair_team'):
+                pass
 
     def endgame(self, winner):
         self.running = False
@@ -112,22 +100,15 @@ class Battlefield:
         print(f'{winner.name} is winner')
         self.screen()
 
-    async def battle_loop(self, team):
-        enemy_team = self.teams[1] if team == self.teams[0] else self.teams[0]
-        while self.running:
-            if not any(team):
-                self.endgame(enemy_team)
-                break
-            for i in team:
-                await self.actions(i, enemy_team)
-
     async def main(self):
-        loop_1 = asyncio.create_task(self.battle_loop(self.teams[0]))
-        loop_2 = asyncio.create_task(self.battle_loop(self.teams[1]))
         screen = asyncio.create_task(self.screen_loop())
-        await screen
-        await loop_1
-        await loop_2
+        loops = [screen]
+        for team in self.teams:
+            enemy_team = self.teams[1] if team == self.teams[0] else self.teams[0]
+            for ship in team.ships:
+                actions = asyncio.create_task(self.actions(ship, enemy_team))
+                loops.append(actions)
+        await asyncio.gather(*loops)
 
 
 if __name__ == '__main__':
