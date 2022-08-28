@@ -89,7 +89,7 @@ class Battlefield:
                 pass
             if hasattr(ship, 'repair_team'):
                 pass
-            await asyncio.sleep(ship.attack_speed) if hasattr(ship, 'attack_speed') else await asyncio.sleep(10)
+            await asyncio.sleep(ship.reload_time) if hasattr(ship, 'reload_time') else await asyncio.sleep(10)
 
     def endgame(self, winner):
         self.running = False

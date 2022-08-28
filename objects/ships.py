@@ -12,7 +12,7 @@ class HeavyJet(BattleShip):
     MAX_HEALTH = 250
     MAX_ARMOR = 2
     DAMAGE = 18
-    AT_SPEED = 1.5
+    REL_TIME = 1.5
 
 
 class Cruiser(BattleShip, SupportShip):
@@ -20,7 +20,7 @@ class Cruiser(BattleShip, SupportShip):
     MAX_ARMOR = 2
     DAMAGE = 30
     SHIELD = 10
-    AT_SPEED = 2
+    REL_TIME = 2
 
     def __init__(self, *args):
         super().__init__(*args)
