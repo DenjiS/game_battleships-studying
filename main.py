@@ -58,7 +58,7 @@ class Battlefield:
         Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
         :return: Визуальное отображение игры в консоли
         """
-
+        self.clear_screen()
         # Отрисовка
         print('\n')
         print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
@@ -71,7 +71,6 @@ class Battlefield:
 
     async def screen_loop(self):
         while self.running:
-            self.clear_screen()
             self.screen()
             await asyncio.sleep(3)
 
@@ -94,10 +93,9 @@ class Battlefield:
 
     def endgame(self, winner):
         self.running = False
-        self.clear_screen()
+        self.screen()
         print('\n')
         print(f'{winner.name} is winner')
-        self.screen()
 
     async def main(self):
         screen = asyncio.create_task(self.screen_loop())
