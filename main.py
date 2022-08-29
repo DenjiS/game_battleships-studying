@@ -9,48 +9,61 @@ ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
 
 class Team:
+    SIZE = 5
+
     def __init__(self, name, color):
         self.color = color
         self.name = color + name + Style.RESET_ALL
 
         self.ships = []
-        for num in range(5):
+        for num in range(self.SIZE):
             # Создание объекта корабля
             append_ship = choice(ship_types_list)(self, num)
             self.ships.append(append_ship)
 
-            self.count = -1
+
+class BattleIter:
+    def __init__(self, teams):
+        self.teams = teams
+        self.count = 0
+        self.turn = True
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        if not any(self.ships):
-            raise StopIteration
-        self.count += 1
-        if self.count >= len(self.ships):
+        if self.count >= Team.SIZE:
             self.count = 0
-        return self.ships[self.count]
+        if self.turn and any(self.teams[1].ships):
+            self.turn = False
+            return self.teams[0].ships[self.count], self.teams[1]
+        elif not self.turn and any(self.teams[0].ships):
+            self.turn = True
+            self.count += 1
+            return self.teams[1].ships[self.count - 1], self.teams[0]
+        else:
+            raise StopIteration
 
 
 class Battlefield:
-    def __init__(self, team_1, team_2):
+    def __init__(self, *teams):
         # Инициализация команд
-        self.teams = team_1, team_2
+        self.teams = teams
         self.running = True
 
-    def mainloop(self):
-        while self.running:
-            self.clear_screen()
-            self.screen()
-            sleep(0.5)
+    def __iter__(self):
+        return BattleIter(self.teams)
 
-            for i in self.teams:
-                enemy_team = self.teams[1] if i == self.teams[0] else self.teams[0]
-                try:
-                    self.actions(next(i), enemy_team)
-                except StopIteration:
-                    self.endgame(enemy_team)
+    def mainloop(self):
+        btf_iter = iter(self)
+        while self.running:
+            self.screen()
+            sleep(0.1)
+            try:
+                args = next(btf_iter)
+                self.actions(*args)
+            except StopIteration:
+                self.endgame()
 
     @classmethod
     def clear_screen(cls):
@@ -82,12 +95,12 @@ class Battlefield:
         Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
         :return: Визуальное отображение игры в консоли
         """
-
+        self.clear_screen()
         # Отрисовка
         print('\n')
         print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
 
-        for i in range(5):
+        for i in range(Team.SIZE):
             ship_1, ship_2 = self.teams[0].ships[i], self.teams[1].ships[i]
             string_1, string_2 = self.ship_field(ship_1), self.ship_field(ship_2)
 
@@ -99,13 +112,11 @@ class Battlefield:
             targets = [i for i in team_enemy.ships if i is not None]
             enemy = choice(targets)
             ship.take_enemy(enemy)
-            sleep(0.5)
 
-    def endgame(self, winner):
-        self.clear_screen()
-        print('\n')
-        print(f'{winner.name} is winner')
+    def endgame(self):
         self.screen()
+        print('\n')
+        print('FINISH')
         self.running = False
 
 
