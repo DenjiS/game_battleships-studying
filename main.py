@@ -23,9 +23,9 @@ class Team:
 
 
 class Battlefield:
-    def __init__(self, team_1, team_2):
+    def __init__(self, *teams):
         # Инициализация команд
-        self.teams = team_1, team_2
+        self.teams = teams
         self.running = True
 
     @classmethod
@@ -72,7 +72,7 @@ class Battlefield:
     async def screen_loop(self):
         while self.running:
             self.screen()
-            await asyncio.sleep(3)
+            await asyncio.sleep(2.5)
 
     async def actions_loop(self, ship, team_enemy):
         while self.running and ship in ship.team.ships:
