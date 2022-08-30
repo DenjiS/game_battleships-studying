@@ -29,9 +29,6 @@ class BattleIter:
         self.count = 0
         self.turn = True
 
-    def __iter__(self):
-        return self
-
     def __next__(self):
         if self.count >= Team.SIZE:
             self.count = 0
