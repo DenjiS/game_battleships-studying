@@ -14,6 +14,7 @@ class Team:
     def __init__(self, name, color):
         self.color = color
         self.name = color + name + Style.RESET_ALL
+        self.size = self.SIZE
 
         self.ships = []
         for num in range(self.SIZE):
@@ -34,10 +35,10 @@ class BattleIter:
     def __next__(self):
         if self.count >= Team.SIZE:
             self.count = 0
-        if self.turn and any(self.teams[1].ships):
+        if self.turn and self.teams[0].size > 0:
             self.turn = False
             return self.teams[0].ships[self.count], self.teams[1]
-        elif not self.turn and any(self.teams[0].ships):
+        elif not self.turn and self.teams[1].size > 0:
             self.turn = True
             self.count += 1
             return self.teams[1].ships[self.count - 1], self.teams[0]
