@@ -22,15 +22,17 @@ class Ship(metaclass=ShipBuilder):
     def actions(self, team_enemy):
         for module in self.map:
             self.map[module](team_enemy)
+            sleep(module.reload)
 
 
 # Ship Subtypes
 class BattleShip(Ship):
     HIT_CHANCE = 0.85
+    RELOAD = 2
 
     def __init__(self, *args):
         super().__init__(*args)
-        self.weapon = Weapon(self.DAMAGE)
+        self.weapon = Weapon(self.DAMAGE, self.RELOAD)
         self.map[self.weapon] = self.take_enemy
 
     def shoot(self, target):

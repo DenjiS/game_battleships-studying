@@ -1,8 +1,9 @@
 # Battle modules
 class Weapon:
-    def __init__(self, dmg):
+    def __init__(self, dmg, reload):
         self.cd_count = 0
         self.dmg = dmg
+        self.reload = reload
 
     def shoot(self, ship, target, cd=5):
         if target:
@@ -35,6 +36,7 @@ class Shield:
     def __init__(self, shield):
         self.battery = shield
         self.cd_count = 0
+        self.reload = 1
 
     def team_buff(self, ship):
         if self.cd_count <= 0 and self.battery > 0:
@@ -57,6 +59,7 @@ class RepairTeam:
 class Storage:
     def __init__(self, cargo):
         self.cargo = cargo
+        self.reload = 7
 
     def charge_shield(self, target):
         if self.cargo > target.SHIELD:

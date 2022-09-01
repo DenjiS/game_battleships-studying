@@ -2,6 +2,7 @@ from objects.ships import *
 from time import sleep
 from colorama import Fore, Style
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 # Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
@@ -28,33 +29,21 @@ class Battlefield:
         self.teams = teams
         self.running = True
 
-    def battle_gen(self):
-        cursor = 0
-        while self.teams[0].size > 0 and self.teams[1].size > 0:
-            num = int(cursor / 2)
-            team = cursor % 2
-            next_ship = self.teams[team].ships[num]
-            if next_ship:
-                enemy_team = self.teams[1] if next_ship.team == self.teams[0] else self.teams[0]
-                yield next_ship, enemy_team
-            else:
-                yield None, None
-            if cursor == 9:
-                cursor = 0
-            else:
-                cursor += 1
-
     def mainloop(self):
-        gen = self.battle_gen()
+        with ThreadPoolExecutor(max_workers=11) as ex:
+            ex.submit(self.screen_thread)
+            for i in range(10):
+                team = i % 2
+                num = int(i / 2)
+                ship = self.teams[team].ships[num]
+                team_enemy = self.teams[1] if team == 0 else self.teams[0]
+                ex.submit(self.actions_thread, ship, team_enemy)
+
+    def actions_thread(self, ship, team_enemy):
         while self.running:
-            self.clear_screen()
-            self.screen()
-            sleep(0.5)
-            try:
-                ship, enemy_team = next(gen)
-                if ship:
-                    ship.actions(enemy_team)
-            except StopIteration:
+            if team_enemy:
+                ship.actions(team_enemy)
+            else:
                 self.endgame()
 
     @classmethod
@@ -97,6 +86,11 @@ class Battlefield:
             string_1, string_2 = self.ship_field(ship_1), self.ship_field(ship_2)
 
             print(string_1 + self.space(string_1) + string_2)
+
+    def screen_thread(self):
+        while self.running:
+            self.screen()
+            sleep(2.5)
 
     def endgame(self):
         self.clear_screen()
