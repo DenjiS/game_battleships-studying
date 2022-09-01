@@ -3,6 +3,7 @@ from time import sleep
 from colorama import Fore, Style
 import os
 from concurrent.futures import ThreadPoolExecutor
+from threading import Lock
 
 # Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
@@ -40,11 +41,12 @@ class Battlefield:
                 ex.submit(self.actions_thread, ship, team_enemy)
 
     def actions_thread(self, ship, team_enemy):
-        while ship is not None:
+        while ship.health > 0:
             if team_enemy:
                 ship.actions(team_enemy)
             else:
                 self.endgame()
+                break
 
     @classmethod
     def clear_screen(cls):
@@ -89,7 +91,10 @@ class Battlefield:
 
     def screen_thread(self):
         while self.running:
+            scr_lock = Lock()
+            scr_lock.acquire()
             self.screen()
+            scr_lock.release()
             sleep(2.5)
 
     def endgame(self):
