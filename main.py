@@ -30,7 +30,7 @@ class Battlefield:
         self.running = True
 
     def mainloop(self):
-        with ThreadPoolExecutor(max_workers=11) as ex:
+        with ThreadPoolExecutor(max_workers=Team.SIZE * 2 + 1) as ex:
             ex.submit(self.screen_thread)
             for i in range(10):
                 team = i % 2
@@ -40,7 +40,7 @@ class Battlefield:
                 ex.submit(self.actions_thread, ship, team_enemy)
 
     def actions_thread(self, ship, team_enemy):
-        while self.running:
+        while ship is not None:
             if team_enemy:
                 ship.actions(team_enemy)
             else:
