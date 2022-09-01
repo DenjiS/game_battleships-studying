@@ -21,7 +21,7 @@ class Weapon:
             if target.health <= 0:
                 print(f'{target.name} destroyed')
                 target.team.ships[target.num] = None
-
+                target.team.size -= 1
             # Miss
         else:
             print(f'{ship.name} : shoot --> missed')
