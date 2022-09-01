@@ -16,7 +16,7 @@ class Team:
         self.size = self.SIZE
 
         self.ships = []
-        for num in range(Team.SIZE):
+        for num in range(self.SIZE):
             # Создание объекта корабля
             append_ship = choice(ship_types_list)(self, num)
             self.ships.append(append_ship)
