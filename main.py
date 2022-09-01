@@ -47,7 +47,7 @@ class Battlefield:
             for i in self.teams:
                 enemy_team = self.teams[1] if i == self.teams[0] else self.teams[0]
                 try:
-                    self.actions(next(i), enemy_team)
+                    next(i).acions(enemy_team)
                 except StopIteration:
                     self.endgame(enemy_team)
 

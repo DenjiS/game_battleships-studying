@@ -19,12 +19,14 @@ class Ship(metaclass=ShipBuilder):
         self.armor = self.MAX_ARMOR
 
     def actions(self, team_enemy):
-        if hasattr(self, 'weapon')
+        if hasattr(self, 'weapon'):
             targets = [i for i in team_enemy.ships if i is not None]
             enemy = choice(targets)
             self.take_enemy(enemy)
             sleep(0.5)
 
+
+# Ship Subtypes
 class BattleShip(Ship):
     HIT_CHANCE = 0.85
 
