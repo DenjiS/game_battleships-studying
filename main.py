@@ -29,20 +29,20 @@ class Battlefield:
         self.running = True
 
     def battle_gen(self):
-        pointer = 0
+        cursor = 0
         while self.teams[0].size > 0 and self.teams[1].size > 0:
-            num = int(pointer / 2)
-            team = pointer % 2
+            num = int(cursor / 2)
+            team = cursor % 2
             next_ship = self.teams[team].ships[num]
             if next_ship:
                 enemy_team = self.teams[1] if next_ship.team == self.teams[0] else self.teams[0]
                 yield next_ship, enemy_team
             else:
                 yield None, None
-            if pointer == 9:
-                pointer = 0
+            if cursor == 9:
+                cursor = 0
             else:
-                pointer += 1
+                cursor += 1
 
     def mainloop(self):
         gen = self.battle_gen()
