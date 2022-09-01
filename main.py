@@ -42,7 +42,7 @@ class Battlefield:
 
     def actions_thread(self, ship, team_enemy):
         while ship.health > 0:
-            if team_enemy:
+            if team_enemy.size > 0:
                 ship.actions(team_enemy)
             else:
                 self.endgame()
@@ -100,8 +100,7 @@ class Battlefield:
     def endgame(self):
         self.clear_screen()
         winner = self.teams[0] if any(self.teams[0].ships) else self.teams[1]
-        print('\n')
-        print(f'{winner.name} is winner')
+        print(f'\n{winner.name} is winner')
         self.screen()
         self.running = False
 

@@ -76,4 +76,4 @@ class TransportShip(Ship):
         for ally in self.team.ships:
             if hasattr(ally, 'shield') and ally.shield.battery <= 0 and self.storage.cargo > ally.SHIELD:
                 self.storage.charge_shield(ally)
-                print(f'{self.name} : charging shield ({ally.SHIELD}) --> {ally.name}')
+                print(f'\n{self.name} : charging shield ({ally.SHIELD}) --> {ally.name}')
