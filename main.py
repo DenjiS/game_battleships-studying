@@ -8,12 +8,15 @@ ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
 
 class Team:
+    SIZE = 5
+
     def __init__(self, name, color):
         self.color = color
         self.name = color + name + Style.RESET_ALL
+        self.size = self.SIZE
 
         self.ships = []
-        for num in range(5):
+        for num in range(Team.SIZE):
             # Создание объекта корабля
             append_ship = choice(ship_types_list)(self, num)
             self.ships.append(append_ship)
@@ -25,27 +28,34 @@ class Battlefield:
         self.teams = teams
         self.running = True
 
-    def battle_gen(self, teams):
-        iters = [iter(i.ships) for i in teams]
-        turn = 0
-        while teams:
-            yield next(iters[turn])
-            if turn == 0:
-                turn = 1
+    def battle_gen(self):
+        pointer = 0
+        while self.teams[0].size > 0 and self.teams[1].size > 0:
+            num = int(pointer / 2)
+            team = pointer % 2
+            next_ship = self.teams[team].ships[num]
+            if next_ship:
+                enemy_team = self.teams[1] if next_ship.team == self.teams[0] else self.teams[0]
+                yield next_ship, enemy_team
             else:
-                turn = 0
+                yield None, None
+            if pointer == 9:
+                pointer = 0
+            else:
+                pointer += 1
 
     def mainloop(self):
-        gen = self.battle_gen(self.teams)
+        gen = self.battle_gen()
         while self.running:
             self.clear_screen()
             self.screen()
             sleep(0.5)
-
-            ship = next(gen)
-            enemy_team = self.teams[1] if ship.team == self.teams[0] else self.teams[0]
-            if ship:
-                ship.actions(enemy_team)
+            try:
+                ship, enemy_team = next(gen)
+                if ship:
+                    ship.actions(enemy_team)
+            except StopIteration:
+                self.endgame()
 
     @classmethod
     def clear_screen(cls):
@@ -67,7 +77,7 @@ class Battlefield:
         """
         if ship:
             space_ship_field = 25 - len(ship.name)
-            ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}'
+            ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}\\{ship.armor}'
             return ship.name + '_' * space_ship_field + ship_hp
         elif not ship:
             return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # Death string
@@ -88,8 +98,9 @@ class Battlefield:
 
             print(string_1 + self.space(string_1) + string_2)
 
-    def endgame(self, winner):
+    def endgame(self):
         self.clear_screen()
+        winner = self.teams[0] if any(self.teams[0].ships) else self.teams[1]
         print('\n')
         print(f'{winner.name} is winner')
         self.screen()

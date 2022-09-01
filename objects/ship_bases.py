@@ -20,8 +20,8 @@ class Ship(metaclass=ShipBuilder):
         self.map = {}
 
     def actions(self, team_enemy):
-        for action in self.map:
-            self.map[action](team_enemy)
+        for module in self.map:
+            self.map[module](team_enemy)
 
 
 # Ship Subtypes
@@ -31,7 +31,7 @@ class BattleShip(Ship):
     def __init__(self, *args):
         super().__init__(*args)
         self.weapon = Weapon(self.DAMAGE)
-        self.map['weapon'] = self.take_enemy
+        self.map[self.weapon] = self.take_enemy
 
     def shoot(self, target):
         self.weapon.shoot(self, target)
@@ -55,12 +55,12 @@ class SupportShip(Ship):
         super().__init__(*args)
         if self.SHIELD:
             self.shield = Shield(self.SHIELD)
-            self.map['shield'] = self.team_buff
+            self.map[self.shield] = self.team_buff
         if self.TEAM:
             self.repair_team = RepairTeam(self.TEAM)
 
     def team_buff(self, *args):
-        if self.shield.shield > 0:
+        if self.shield.battery > 0:
             self.shield.team_buff(self)
 
 
@@ -68,10 +68,10 @@ class TransportShip(Ship):
     def __init__(self, *args):
         super().__init__(*args)
         self.storage = Storage(self.CARGO)
-        self.map['charger'] = self.charge_ships
+        self.map[self.storage] = self.charge_ships
 
     def charge_ships(self, *args):
         for ship in self.team.ships:
-            if hasattr(ship, 'shield') and ship.shield.shield <= 0:
-                self.storage.charge(ship.shield.shield, ship.SHIELD)
+            if hasattr(ship, 'shield') and ship.shield.battery <= 0:
+                self.storage.charge(ship.shield.battery, ship.SHIELD)
                 print(f'{self.name} : charging shield ({ship.SHIELD}) --> {ship.name}')
