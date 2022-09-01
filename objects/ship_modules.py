@@ -29,19 +29,29 @@ class Weapon:
         self.cd_count -= 1
 
 
+# Support modules
+class Shield:
+    def __init__(self, shield):
+        self.shield = shield
+
+    def team_buff(self, ship):
+        for ally in ship.team.ships:
+            ally.armor += 1
+            self.shield -= 1
+        print(f'{ship.name} : team buff (.armor +1)')
+
+
+class RepairTeam:
+    def __init__(self, size):
+        self.size = size
+
+
 # Transport modules
 class Storage:
     def __init__(self, cargo):
         self.cargo = cargo
         self.size = cargo
 
-
-# Support modules
-class Shield:
-    def __init__(self, shield):
-        self.shield = shield
-
-
-class RepairTeam:
-    def __init__(self, size):
-        self.size = size
+    def charge(self, module, amount):
+        self.cargo -= amount
+        module += amount

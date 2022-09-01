@@ -18,38 +18,34 @@ class Team:
             append_ship = choice(ship_types_list)(self, num)
             self.ships.append(append_ship)
 
-            self.count = -1
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if not any(self.ships):
-            raise StopIteration
-        self.count += 1
-        if self.count >= len(self.ships):
-            self.count = 0
-        return self.ships[self.count]
-
 
 class Battlefield:
-    def __init__(self, team_1, team_2):
+    def __init__(self, *teams):
         # Инициализация команд
-        self.teams = team_1, team_2
+        self.teams = teams
         self.running = True
 
+    def battle_gen(self, teams):
+        iters = [iter(i.ships) for i in teams]
+        turn = 0
+        while teams:
+            yield next(iters[turn])
+            if turn == 0:
+                turn = 1
+            else:
+                turn = 0
+
     def mainloop(self):
+        gen = self.battle_gen(self.teams)
         while self.running:
             self.clear_screen()
             self.screen()
             sleep(0.5)
 
-            for i in self.teams:
-                enemy_team = self.teams[1] if i == self.teams[0] else self.teams[0]
-                try:
-                    next(i).acions(enemy_team)
-                except StopIteration:
-                    self.endgame(enemy_team)
+            ship = next(gen)
+            enemy_team = self.teams[1] if ship.team == self.teams[0] else self.teams[0]
+            if ship:
+                ship.actions(enemy_team)
 
     @classmethod
     def clear_screen(cls):
