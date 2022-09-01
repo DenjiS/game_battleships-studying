@@ -1,6 +1,7 @@
 from objects.ship_modules import *
 from colorama import Style
-from random import random
+from random import random, choice
+from time import sleep
 
 
 class ShipBuilder(type):
@@ -17,6 +18,12 @@ class Ship(metaclass=ShipBuilder):
         self.health = self.MAX_HEALTH
         self.armor = self.MAX_ARMOR
 
+    def actions(self, team_enemy):
+        if hasattr(self, 'weapon')
+            targets = [i for i in team_enemy.ships if i is not None]
+            enemy = choice(targets)
+            self.take_enemy(enemy)
+            sleep(0.5)
 
 class BattleShip(Ship):
     HIT_CHANCE = 0.85

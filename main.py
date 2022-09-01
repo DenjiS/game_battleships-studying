@@ -1,5 +1,4 @@
 from objects.ships import *
-from random import choice
 from time import sleep
 from colorama import Fore, Style
 import os
@@ -92,14 +91,6 @@ class Battlefield:
             string_1, string_2 = self.ship_field(ship_1), self.ship_field(ship_2)
 
             print(string_1 + self.space(string_1) + string_2)
-
-    @classmethod
-    def actions(cls, ship, team_enemy):
-        if hasattr(ship, 'weapon'):
-            targets = [i for i in team_enemy.ships if i is not None]
-            enemy = choice(targets)
-            ship.take_enemy(enemy)
-            sleep(0.5)
 
     def endgame(self, winner):
         self.clear_screen()
