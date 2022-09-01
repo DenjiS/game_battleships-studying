@@ -30,7 +30,7 @@ class Battlefield:
         self.running = True
 
     def mainloop(self):
-        with ThreadPoolExecutor(max_workers=Team.SIZE * 2 + 1) as ex:
+        with ThreadPoolExecutor(max_workers=11) as ex:
             ex.submit(self.screen_thread)
             for i in range(10):
                 team = i % 2
