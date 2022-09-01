@@ -57,9 +57,8 @@ class RepairTeam:
 class Storage:
     def __init__(self, cargo):
         self.cargo = cargo
-        self.size = cargo
 
-    def charge(self, module, amount):
-        if self.cargo:
-            self.cargo -= amount
-            module += amount
+    def charge_shield(self, target):
+        if self.cargo > target.SHIELD:
+            self.cargo -= target.SHIELD
+            target.shield.battery += target.SHIELD

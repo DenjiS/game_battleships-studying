@@ -71,7 +71,7 @@ class TransportShip(Ship):
         self.map[self.storage] = self.charge_ships
 
     def charge_ships(self, *args):
-        for ship in self.team.ships:
-            if hasattr(ship, 'shield') and ship.shield.battery <= 0:
-                self.storage.charge(ship.shield.battery, ship.SHIELD)
-                print(f'{self.name} : charging shield ({ship.SHIELD}) --> {ship.name}')
+        for ally in self.team.ships:
+            if hasattr(ally, 'shield') and ally.shield.battery <= 0 and self.storage.cargo > ally.SHIELD:
+                self.storage.charge_shield(ally)
+                print(f'{self.name} : charging shield ({ally.SHIELD}) --> {ally.name}')
