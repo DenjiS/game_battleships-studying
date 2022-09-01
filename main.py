@@ -3,7 +3,7 @@ from time import sleep
 from colorama import Fore, Style
 import os
 from concurrent.futures import ThreadPoolExecutor
-from threading import Lock
+from threading import RLock
 
 # Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
@@ -90,8 +90,8 @@ class Battlefield:
             print(string_1 + self.space(string_1) + string_2)
 
     def screen_thread(self):
+        scr_lock = RLock()
         while self.running:
-            scr_lock = Lock()
             scr_lock.acquire()
             self.screen()
             scr_lock.release()

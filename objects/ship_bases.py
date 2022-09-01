@@ -2,6 +2,7 @@ from objects.ship_modules import *
 from colorama import Style
 from random import random, choice
 from time import sleep
+from threading import Lock
 
 
 class ShipBuilder(type):
@@ -21,7 +22,10 @@ class Ship(metaclass=ShipBuilder):
 
     def actions(self, team_enemy):
         for module in self.map:
+            act_lock = Lock()
+            act_lock.acquire()
             self.map[module](team_enemy)
+            act_lock.release()
             sleep(module.reload)
 
 
