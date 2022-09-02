@@ -3,30 +3,20 @@ from colorama import Style
 from random import random, choice
 from time import sleep
 from threading import Lock
+from abc import ABC, abstractmethod
 
 
-class ShipBuilder(type):
-    def __init__(cls, name, bases, attrs):
-        super().__init__(name, bases, attrs)
-        cls.CLS_NAME = name
-
-
-class Ship(metaclass=ShipBuilder):
+class Ship(ABC):
     def __init__(self, team, num):
         self.team = team
         self.num = num
-        self.name = team.color + self.CLS_NAME + f'_{num}' + Style.RESET_ALL
+        self.name = team.color + self.__class__.__name__ + f'_{num}' + Style.RESET_ALL
         self.health = self.MAX_HEALTH
         self.armor = self.MAX_ARMOR
-        self.map = {}
 
+    @abstractmethod
     def actions(self, team_enemy):
-        for module in self.map:
-            act_lock = Lock()
-            act_lock.acquire()
-            self.map[module](team_enemy)
-            act_lock.release()
-            sleep(module.reload)
+        pass
 
 
 # Ship Subtypes
@@ -37,7 +27,6 @@ class BattleShip(Ship):
     def __init__(self, *args):
         super().__init__(*args)
         self.weapon = Weapon(self.DAMAGE, self.RELOAD)
-        self.map[self.weapon] = self.take_enemy
 
     def shoot(self, target):
         self.weapon.shoot(self, target)
@@ -52,6 +41,11 @@ class BattleShip(Ship):
             else:
                 self.shoot(None)
 
+    def actions(self, team_enemy, *args):
+        super().actions(*args)
+        self.take_enemy(team_enemy)
+        sleep(self.weapon.reload)
+
 
 class SupportShip(Ship):
     SHIELD = None
@@ -61,23 +55,32 @@ class SupportShip(Ship):
         super().__init__(*args)
         if self.SHIELD:
             self.shield = Shield(self.SHIELD)
-            self.map[self.shield] = self.team_buff
         if self.TEAM:
             self.repair_team = RepairTeam(self.TEAM)
 
-    def team_buff(self, *args):
+    def team_buff(self):
         if self.shield.battery > 0:
             self.shield.team_buff(self)
+
+    def actions(self, *args):
+        super().actions(*args)
+        --if self.shield:
+            self.team_buff()
+            sleep(self.shield.reload)
 
 
 class TransportShip(Ship):
     def __init__(self, *args):
         super().__init__(*args)
         self.storage = Storage(self.CARGO)
-        self.map[self.storage] = self.charge_ships
 
-    def charge_ships(self, *args):
+    def charge_ships(self):
         for ally in self.team.ships:
             if hasattr(ally, 'shield') and ally.shield.battery <= 0 and self.storage.cargo > ally.SHIELD:
                 self.storage.charge_shield(ally)
                 print(f'\n{self.name} : charging shield ({ally.SHIELD}) --> {ally.name}')
+
+    def actions(self, *args):
+        super().actions(*args)
+        self.charge_ships()
+        sleep(self.storage.reload)
