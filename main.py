@@ -47,13 +47,13 @@ class Battlefield:
     def mainloop(self):
         gen = self.battle_gen()
         while self.running:
-            self.clear_screen()
             self.screen()
             sleep(0.5)
             try:
                 ship, enemy_team = next(gen)
                 if ship:
                     ship.actions(enemy_team)
+
             except StopIteration:
                 self.endgame()
 
@@ -87,12 +87,12 @@ class Battlefield:
         Функция отрисовывает построчно поле игры, собирая в итерации цикла строку из аттрибутов объектов кораблей
         :return: Визуальное отображение игры в консоли
         """
-
+        self.clear_screen()
         # Отрисовка
         print('\n')
         print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
 
-        for i in range(5):
+        for i in range(Team.SIZE):
             ship_1, ship_2 = self.teams[0].ships[i], self.teams[1].ships[i]
             string_1, string_2 = self.ship_field(ship_1), self.ship_field(ship_2)
 
@@ -104,6 +104,8 @@ class Battlefield:
         print('\n')
         print(f'{winner.name} is winner')
         self.screen()
+        print('\n')
+        print('FINISH')
         self.running = False
 
 
