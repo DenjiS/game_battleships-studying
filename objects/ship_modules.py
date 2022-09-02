@@ -4,7 +4,7 @@ class Weapon:
         self.cd_count = 0
         self.dmg = dmg
 
-    def shoot(self, ship, target, cd=10):
+    def shoot(self, ship, target, cd=5):
         if target:
 
             # Damage
@@ -19,9 +19,10 @@ class Weapon:
 
             # Kill
             if target.health <= 0:
-                print(f'{target.name} destroyed')
                 target.team.ships[target.num] = None
                 target.team.size -= 1
+                print(f'{target.name} destroyed')
+
             # Miss
         else:
             print(f'{ship.name} : shoot --> missed')
@@ -29,19 +30,35 @@ class Weapon:
         self.cd_count -= 1
 
 
-# Transport modules
-class Storage:
-    def __init__(self, cargo):
-        self.cargo = cargo
-        self.size = cargo
-
-
 # Support modules
 class Shield:
     def __init__(self, shield):
-        self.shield = shield
+        self.battery = shield
+        self.cd_count = 0
+
+    def team_buff(self, ship):
+        if self.cd_count <= 0 and self.battery > 0:
+            for ally in ship.team.ships:
+                if ally:
+                    ally.armor += 1
+            self.battery -= 1
+            print(f'{ship.name} : team buff (.armor +1), bat={self.battery}')
+            self.cd_count = 3
+        else:
+            self.cd_count -= 1
 
 
 class RepairTeam:
     def __init__(self, size):
         self.size = size
+
+
+# Transport modules
+class Storage:
+    def __init__(self, cargo):
+        self.cargo = cargo
+
+    def charge_shield(self, target):
+        if self.cargo > target.SHIELD:
+            self.cargo -= target.SHIELD
+            target.shield.battery += target.SHIELD

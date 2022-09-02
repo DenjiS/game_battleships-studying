@@ -13,6 +13,9 @@ class HeavyJet(BattleShip):
     MAX_ARMOR = 2
     DAMAGE = 18
 
+    def shoot(self, target):
+        self.weapon.shoot(self, target, cd=3)
+
 
 class Cruiser(BattleShip, SupportShip):
     MAX_HEALTH = 1000
@@ -24,7 +27,7 @@ class Cruiser(BattleShip, SupportShip):
         super().__init__(*args)
 
     def shoot(self, target):
-        self.weapon.shoot(self, target, cd=5)
+        self.weapon.shoot(self, target, cd=2)
 
 
 class CargoShip(TransportShip):
