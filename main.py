@@ -81,7 +81,7 @@ class Battlefield:
                 ship.actions(team_enemy=team_enemy)
                 sleep(ship.reload)
             else:
-                self.endgame()
+                self.endgame(ship.team)
 
     def timer_thread(self):
         s = 0
@@ -94,10 +94,9 @@ class Battlefield:
                 m += 1
                 s = 0
 
-    def endgame(self):
+    def endgame(self, winner):
         self.running = False
         self.clear_screen()
-        winner = self.teams[0] if any(self.teams[0].ships) else self.teams[1]
         print(f'\n{winner.name} is winner')
         self.screen()
 
