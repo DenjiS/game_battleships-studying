@@ -61,8 +61,7 @@ class SupportShip(Ship):
             self.shield.team_buff(self)
 
     def heal_ally(self):
-        alive_allys = [i for i in self.team.ships if i is not (self and None)]
-        targets = [i for i in alive_allys if i.health < i.MAX_HEALTH]
+        targets = [i for i in self.team.ships if i is not (self and None) and i.health < i.MAX_HEALTH]
         if targets:
             ally = choice(targets)
             hp_to_heal = self.repair_team.diagnostics(ally)
