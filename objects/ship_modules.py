@@ -25,8 +25,8 @@ class Weapon:
 
             # Kill
             if target.health <= 0:
+                target.team.size -= 1 if target.team.ships[target.num] is not None else 0  # 'threads problem' fix (probably temporary)
                 target.team.ships[target.num] = None
-                target.team.size -= 1
                 print(f'{target.name} destroyed')
 
             # Miss
