@@ -14,7 +14,7 @@ class Ship(ABC):
         self.reload = 0
 
     @abstractmethod
-    def actions(self): pass
+    def actions(self): self.reload = 0
 
 
 # Ship Subtypes
