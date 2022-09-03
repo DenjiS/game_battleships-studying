@@ -82,6 +82,7 @@ class Battlefield:
                 s = 0
 
     def endgame(self, winner):
+        """Stops the game"""
         self.running = False
         self.clear_screen()
         print(f'\n{winner.name} is winner')
