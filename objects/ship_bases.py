@@ -60,12 +60,21 @@ class SupportShip(Ship):
         if self.shield.battery > 0:
             self.shield.team_buff(self)
 
+    def heal_ally(self):
+        targets = [i for i in self.team.ships if i is not self and i.health < i.MAX_HEALTH]
+        if targets:
+            ally = choice(targets)
+            hp_to_heal = self.repair_team.diagnostics(ally)
+            self.repair_team.heal(ally, hp_to_heal)
+            print(f'{self.name} : repair ({hp_to_heal}) --> {ally.name}')
+
     def actions(self, **kwargs):
         super().actions()
         if hasattr(self, 'shield'):
             self.team_buff()
             self.reload += self.shield.reload
         if hasattr(self, 'repair_team'):
+            self.heal_ally()
             self.reload += self.repair_team.reload
 
 

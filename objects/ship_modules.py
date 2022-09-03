@@ -12,6 +12,11 @@ class Weapon:
             target.health = target.health - (self.dmg - target.armor)
             print(f'{ship.name} : shoot --> {target.name}')
 
+            # Kill repair team member
+            if hasattr(target, 'repair_team') and target.repair_team.size > 0 and target.armor <= 0:
+                target.repair_team.size -= 1
+                print(f'{ship.name} : killed 1 rep.team member --> {target.name}')
+
             # Armor reduction -- ability
             if self.cd_count <= 0 and target.armor > 0:
                 target.armor = target.armor - 1
@@ -53,7 +58,18 @@ class Shield:
 class RepairTeam:
     def __init__(self, size):
         self.size = size
-        self.reload = 10
+        self.reload = 6
+
+    def diagnostics(self, target):
+        hp_lost = target.MAX_HEALTH - target.health
+        if hp_lost < self.size:
+            return hp_lost
+        else:
+            return self.size
+
+    @classmethod
+    def heal(cls, target, hp_to_heal):
+        target.health += hp_to_heal
 
 
 # Transport modules
