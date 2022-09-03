@@ -82,11 +82,10 @@ class Battlefield:
             else:
                 self.endgame()
 
-    @classmethod
-    async def timer_coroutine(cls):
+    async def timer_coroutine(self):
         s = 0
         m = 0
-        while s <= 60:
+        while s <= 60 and self.running:
             print(f'{m}:0{s}') if s < 10 else print(f'{m}:{s}')
             await asyncio.sleep(1)
             s += 1
