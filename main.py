@@ -59,6 +59,7 @@ class Battlefield:
     # Coroutines
     async def screen_coroutine(self):
         while self.running:
+            self.clear_screen()
             self.screen()
             await asyncio.sleep(2.5)
 
