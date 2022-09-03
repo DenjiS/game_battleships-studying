@@ -1,5 +1,9 @@
+class Module(object):
+    __slots__ = 'reload'
+
+
 # Battle modules
-class Weapon:
+class Weapon(Module):
     def __init__(self, dmg, reload):
         self.cd_count = 0
         self.dmg = dmg
@@ -37,7 +41,7 @@ class Weapon:
 
 
 # Support modules
-class Shield:
+class Shield(Module):
     def __init__(self, shield):
         self.battery = shield
         self.cd_count = 0
@@ -55,7 +59,7 @@ class Shield:
             self.cd_count -= 1
 
 
-class RepairTeam:
+class RepairTeam(Module):
     def __init__(self, size):
         self.size = size
         self.reload = 6
@@ -73,7 +77,7 @@ class RepairTeam:
 
 
 # Transport modules
-class Storage:
+class Storage(Module):
     def __init__(self, cargo):
         self.cargo = cargo
         self.reload = 7
