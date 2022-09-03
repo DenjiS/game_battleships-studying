@@ -84,16 +84,15 @@ class Battlefield:
                 self.endgame()
 
     def timer_thread(self):
-        while self.running:
-            s = 0
-            m = 0
-            while s <= 60:
-                print(f'{m}:0{s}') if s < 10 else print(f'{m}:{s}')
-                sleep(1)
-                s += 1
-                if s == 60:
-                    m += 1
-                    s = 0
+        s = 0
+        m = 0
+        while s <= 60 and self.running:
+            print(f'{m}:0{s}') if s < 10 else print(f'{m}:{s}')
+            sleep(1)
+            s += 1
+            if s == 60:
+                m += 1
+                s = 0
 
     def endgame(self):
         self.running = False
