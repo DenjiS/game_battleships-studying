@@ -53,6 +53,7 @@ class Shield:
 class RepairTeam:
     def __init__(self, size):
         self.size = size
+        self.reload = 10
 
 
 # Transport modules

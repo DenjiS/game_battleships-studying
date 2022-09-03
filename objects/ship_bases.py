@@ -65,6 +65,8 @@ class SupportShip(Ship):
         if hasattr(self, 'shield'):
             self.team_buff()
             self.reload += self.shield.reload
+        if hasattr(self, 'repair_team'):
+            self.reload += self.repair_team.reload
 
 
 class TransportShip(Ship):

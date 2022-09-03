@@ -1,5 +1,4 @@
 from objects.ships import *
-from time import sleep
 from colorama import Fore, Style
 import os
 import asyncio
@@ -83,6 +82,18 @@ class Battlefield:
             else:
                 self.endgame()
 
+    @classmethod
+    async def timer_coroutine(cls):
+        s = 0
+        m = 0
+        while s <= 60:
+            print(f'{m}:0{s}') if s < 10 else print(f'{m}:{s}')
+            await asyncio.sleep(1)
+            s += 1
+            if s == 60:
+                m += 1
+                s = 0
+
     def endgame(self):
         self.running = False
         self.clear_screen()
@@ -92,7 +103,8 @@ class Battlefield:
 
     async def main(self):
         screen_cr = asyncio.create_task(self.screen_coroutine())
-        coroutines = [screen_cr]
+        timer_cr = asyncio.create_task(self.timer_coroutine())
+        coroutines = [screen_cr, timer_cr]
         for team in self.teams:
             enemy_team = self.teams[1] if team == self.teams[0] else self.teams[0]
             for ship in team.ships:
