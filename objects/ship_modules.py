@@ -45,7 +45,7 @@ class Shield:
                     ally.armor += 1
             self.battery -= 1
             print(f'{ship.name} : team buff (.armor +1), bat={self.battery}')
-            self.cd_count = 10
+            self.cd_count = 4
         else:
             self.cd_count -= 1
 
