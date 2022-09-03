@@ -43,7 +43,7 @@ class Battlefield:
             ship_bars = f'AR:{ship.armor}_HP:{ship.health}\\{ship.MAX_HEALTH}'
             return ship.name + '_' * space_ship_field + ship_bars
         elif not ship:
-            return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # death string
+            return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 16 + Style.RESET_ALL  # death string
 
     def screen(self):
         print('\n')
