@@ -87,6 +87,7 @@ class Battlefield:
         self.clear_screen()
         print(f'\n{winner.name} is winner')
         self.screen()
+        print(f'\nFINISH')
 
     async def main(self):
         """Gathers all coroutines together"""
