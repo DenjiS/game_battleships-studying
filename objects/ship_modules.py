@@ -10,23 +10,23 @@ class Weapon:
 
             # Damage
             target.health = target.health - (self.dmg - target.armor)
-            print(f'\n{ship.name} : shoot --> {target.name}')
+            print(f'{ship.name} : shoot --> {target.name}')
 
             # Armor reduction -- ability
             if self.cd_count <= 0 and target.armor > 0:
                 target.armor = target.armor - 1
-                print(f'\n{ship.name} : break_armor --> {target.name}')
+                print(f'{ship.name} : break_armor --> {target.name}')
                 self.cd_count = cd + 1  # ability cooldown
 
             # Kill
             if target.health <= 0:
                 target.team.ships[target.num] = None
                 target.team.size -= 1
-                print(f'\n{target.name} destroyed')
+                print(f'{target.name} destroyed')
 
             # Miss
         else:
-            print(f'\n{ship.name} : shoot --> missed')
+            print(f'{ship.name} : shoot --> missed')
 
         self.cd_count -= 1
 
@@ -44,7 +44,7 @@ class Shield:
                 if ally:
                     ally.armor += 1
             self.battery -= 1
-            print(f'\n{ship.name} : team buff (.armor +1), bat={self.battery}')
+            print(f'{ship.name} : team buff (.armor +1), bat={self.battery}')
             self.cd_count = 3
         else:
             self.cd_count -= 1

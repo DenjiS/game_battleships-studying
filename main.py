@@ -2,8 +2,7 @@ from objects.ships import *
 from time import sleep
 from colorama import Fore, Style
 import os
-from concurrent.futures import ThreadPoolExecutor
-from threading import RLock
+import asyncio
 
 # Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
@@ -29,24 +28,6 @@ class Battlefield:
         # Инициализация команд
         self.teams = teams
         self.running = True
-
-    def mainloop(self):
-        with ThreadPoolExecutor(max_workers=11) as ex:
-            ex.submit(self.screen_thread)
-            for i in range(10):
-                team = i % 2
-                num = int(i / 2)
-                ship = self.teams[team].ships[num]
-                team_enemy = self.teams[1] if team == 0 else self.teams[0]
-                ex.submit(self.actions_thread, ship, team_enemy)
-
-    def actions_thread(self, ship, team_enemy):
-        while ship.health > 0:
-            if team_enemy.size > 0:
-                ship.actions(team_enemy)
-            else:
-                self.endgame()
-                break
 
     @classmethod
     def clear_screen(cls):
@@ -89,23 +70,41 @@ class Battlefield:
 
             print(string_1 + self.space(string_1) + string_2)
 
-    def screen_thread(self):
-        scr_lock = RLock()
+    async def screen_coroutine(self):
         while self.running:
-            scr_lock.acquire()
             self.screen()
-            scr_lock.release()
-            sleep(2.5)
+            await asyncio.sleep(2.5)
+
+    async def actions_coroutine(self, ship, team_enemy):
+        while ship.health > 0 and self.running:
+            if team_enemy.size > 0 and ship.modules:
+                for module in ship.modules:
+                    ship.modules[module](team_enemy)
+                    await asyncio.sleep(module.reload)
+            elif not ship.modules:
+                await asyncio.sleep(10)
+            else:
+                self.endgame()
 
     def endgame(self):
+        self.running = False
         self.clear_screen()
         winner = self.teams[0] if any(self.teams[0].ships) else self.teams[1]
         print(f'\n{winner.name} is winner')
         self.screen()
-        self.running = False
+
+    async def main(self):
+        screen_cr = asyncio.create_task(self.screen_coroutine())
+        coroutines = [screen_cr]
+        for team in self.teams:
+            enemy_team = self.teams[1] if team == self.teams[0] else self.teams[0]
+            for ship in team.ships:
+                actions_cr = asyncio.create_task(self.actions_coroutine(ship, enemy_team))
+                coroutines.append(actions_cr)
+        await asyncio.gather(*coroutines)
 
 
 if __name__ == '__main__':
     team_red, team_blue = Team('RED', Fore.RED), Team('BLUE', Fore.BLUE)
     btf = Battlefield(team_red, team_blue)
-    btf.mainloop()
+    asyncio.run(btf.main())
