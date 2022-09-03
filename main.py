@@ -44,7 +44,7 @@ class Battlefield:
             ship_bars = f'AR:{ship.armor}_HP:{ship.health}\\{ship.MAX_HEALTH}'
             return ship.name + '_' * space_ship_field + ship_bars
         elif not ship:
-            return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # Death string
+            return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # death string
 
     def screen(self):
         print('\n')
@@ -83,12 +83,14 @@ class Battlefield:
                 s = 0
 
     def endgame(self, winner):
+        """Stops the game"""
         self.running = False
         self.clear_screen()
         print(f'\n{winner.name} is winner')
         self.screen()
 
     def main(self):
+        """Launches all threads"""
         with ThreadPoolExecutor(max_workers=12) as ex:
             ex.submit(self.screen_thread)
             ex.submit(self.timer_thread)
