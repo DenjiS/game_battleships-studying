@@ -36,7 +36,7 @@ class Shield:
     def __init__(self, shield):
         self.battery = shield
         self.cd_count = 0
-        self.reload = 1
+        self.reload = 0.3
 
     def team_buff(self, ship):
         if self.cd_count <= 0 and self.battery > 0:
@@ -45,7 +45,7 @@ class Shield:
                     ally.armor += 1
             self.battery -= 1
             print(f'{ship.name} : team buff (.armor +1), bat={self.battery}')
-            self.cd_count = 3
+            self.cd_count = 10
         else:
             self.cd_count -= 1
 

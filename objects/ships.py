@@ -23,7 +23,7 @@ class Cruiser(BattleShip, SupportShip):
     MAX_ARMOR = 2
     DAMAGE = 30
     SHIELD = 10
-    RELOAD = 1.3
+    RELOAD = 1
 
     def __init__(self, *args):
         super().__init__(*args)
