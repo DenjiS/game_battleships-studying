@@ -1,9 +1,10 @@
 from objects.ship_modules import *
 from colorama import Style
 from random import random, choice
+from abc import abstractmethod, ABC
 
 
-class Ship:
+class Ship(ABC):
     def __init__(self, team, num):
         self.team = team
         self.num = num
@@ -11,6 +12,9 @@ class Ship:
         self.health = self.MAX_HEALTH
         self.armor = self.MAX_ARMOR
         self.modules = {}
+
+    @abstractmethod
+    def actions(self): pass
 
 
 # Ship Subtypes
@@ -36,6 +40,9 @@ class BattleShip(Ship):
             else:
                 self.shoot(None)
 
+    def actions(self):
+        super().actions()
+
 
 class SupportShip(Ship):
     SHIELD = None
@@ -53,6 +60,9 @@ class SupportShip(Ship):
         if self.shield.battery > 0:
             self.shield.team_buff(self)
 
+    def actions(self):
+        super().actions()
+
 
 class TransportShip(Ship):
     def __init__(self, *args):
@@ -65,3 +75,6 @@ class TransportShip(Ship):
             if hasattr(ally, 'shield') and ally.shield.battery <= 0 and self.storage.cargo > ally.SHIELD:
                 self.storage.charge_shield(ally)
                 print(f'{self.name} : charging shield ({ally.SHIELD}) --> {ally.name}')
+
+    def actions(self):
+        super().actions()
