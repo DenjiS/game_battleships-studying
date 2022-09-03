@@ -77,12 +77,9 @@ class Battlefield:
 
     async def actions_coroutine(self, ship, team_enemy):
         while ship.health > 0 and self.running:
-            if team_enemy.size > 0 and ship.modules:
-                for module in ship.modules:
-                    ship.modules[module](team_enemy)
-                    await asyncio.sleep(module.reload)
-            elif not ship.modules:
-                await asyncio.sleep(10)
+            if team_enemy.size > 0:
+                ship.actions(team_enemy=team_enemy)
+                await asyncio.sleep(ship.reload)
             else:
                 self.endgame()
 
