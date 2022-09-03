@@ -33,8 +33,8 @@ class Battlefield:
         os.system('cls' if os.name == 'nt' else 'clear')
 
     @classmethod
-    def space(cls, obj):
-        return ' ' * (65 - len(obj))
+    def space(cls, obj, length=65):
+        return ' ' * (length - len(obj))
 
     @classmethod
     def ship_field(cls, ship):
@@ -48,7 +48,9 @@ class Battlefield:
     def screen(self):
         print('\n')
         # Team names
-        print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
+        team_str_1 = self.teams[0].name + self.space(self.teams[0].name, length=25) + 'stats'
+        team_str_2 = self.teams[1].name + self.space(self.teams[1].name, length=25) + 'stats'
+        print(team_str_1 + self.space(team_str_1) + team_str_2)
         # Team members
         for i in range(5):
             ship_1, ship_2 = self.teams[0].ships[i], self.teams[1].ships[i]
