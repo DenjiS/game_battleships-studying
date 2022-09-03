@@ -41,8 +41,8 @@ class Battlefield:
     def ship_field(cls, ship):
         if ship:
             space_ship_field = 25 - len(ship.name)
-            ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}\\{ship.armor}'
-            return ship.name + '_' * space_ship_field + ship_hp
+            ship_bars = f'AR:{ship.armor}_HP:{ship.health}\\{ship.MAX_HEALTH}'
+            return ship.name + '_' * space_ship_field + ship_bars
         elif not ship:
             return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # Death string
 
