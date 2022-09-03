@@ -11,7 +11,7 @@ class Ship(ABC):
         self.name = team.color + self.__class__.__name__ + f'_{num}' + Style.RESET_ALL
         self.health = self.MAX_HEALTH
         self.armor = self.MAX_ARMOR
-        self.reload = 0
+        self.reload = 0  # sum of reloads of all modules
 
     @abstractmethod
     def actions(self): self.reload = 0
