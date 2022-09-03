@@ -60,6 +60,7 @@ class Battlefield:
     # Threads
     def screen_thread(self):
         while self.running:
+            self.clear_screen()
             self.screen()
             sleep(2.5)
 
