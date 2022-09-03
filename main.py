@@ -40,10 +40,10 @@ class Battlefield:
     def ship_field(cls, ship):
         if ship:
             space_ship_field = 25 - len(ship.name)
-            ship_hp = f'{ship.health}\\{ship.MAX_HEALTH}\\{ship.armor}'
-            return ship.name + '_' * space_ship_field + ship_hp
+            ship_bars = f'AR:{ship.armor}_HP:{ship.health}\\{ship.MAX_HEALTH}'
+            return ship.name + '_' * space_ship_field + ship_bars
         elif not ship:
-            return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # Death string
+            return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # death string
 
     def screen(self):
         print('\n')
@@ -88,6 +88,7 @@ class Battlefield:
         self.screen()
 
     async def main(self):
+        """gather all coroutines together"""
         screen_cr = asyncio.create_task(self.screen_coroutine())
         timer_cr = asyncio.create_task(self.timer_coroutine())
         coroutines = [screen_cr, timer_cr]
