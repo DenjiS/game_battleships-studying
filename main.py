@@ -89,7 +89,7 @@ class Battlefield:
         self.screen()
 
     async def main(self):
-        """gather all coroutines together"""
+        """Gathers all coroutines together"""
         screen_cr = asyncio.create_task(self.screen_coroutine())
         timer_cr = asyncio.create_task(self.timer_coroutine())
         coroutines = [screen_cr, timer_cr]
