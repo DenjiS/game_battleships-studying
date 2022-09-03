@@ -45,7 +45,6 @@ class Battlefield:
             return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # Death string
 
     def screen(self):
-        self.clear_screen()
         print('\n')
         print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
 
@@ -72,18 +71,17 @@ class Battlefield:
                 cursor += 1
 
     def endgame(self):
+        self.running = False
         self.clear_screen()
         winner = self.teams[0] if any(self.teams[0].ships) else self.teams[1]
-        print('\n')
-        print(f'{winner.name} is winner')
+        print(f'\n{winner.name} is winner')
         self.screen()
-        print('\n')
-        print('FINISH')
-        self.running = False
+        print('\nFINISH')
 
     def mainloop(self):
         gen = self.battle_gen()
         while self.running:
+            self.clear_screen()
             self.screen()
             sleep(0.5)
             try:
