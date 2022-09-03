@@ -40,8 +40,9 @@ class BattleShip(Ship):
             else:
                 self.shoot(None)
 
-    def actions(self):
+    def actions(self, team_enemy=None):
         super().actions()
+        self.take_enemy(team_enemy)
 
 
 class SupportShip(Ship):
