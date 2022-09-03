@@ -3,7 +3,6 @@ from colorama import Fore, Style
 import os
 import asyncio
 
-# Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
 
@@ -50,7 +49,7 @@ class Battlefield:
         # Team names
         print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
         # Team members
-        for i in range(5):
+        for i in range(Team.SIZE):
             ship_1, ship_2 = self.teams[0].ships[i], self.teams[1].ships[i]
             string_1, string_2 = self.ship_field(ship_1), self.ship_field(ship_2)
 
