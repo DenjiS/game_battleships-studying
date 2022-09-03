@@ -4,7 +4,6 @@ import os
 from time import sleep
 from concurrent.futures import ThreadPoolExecutor
 
-# Типы кораблей
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
 
