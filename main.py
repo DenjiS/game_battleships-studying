@@ -42,7 +42,7 @@ class Battlefield:
             ship_bars = armor_bar + self.space(armor_bar, length=6) + health_bar
             return ship.name + space_ship_field + ship_bars
         elif not ship:
-            return Fore.LIGHTBLACK_EX + '*' * 10 + '-' * 6 + '\\' * 16 + Style.RESET_ALL  # death string
+            return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 16 + Style.RESET_ALL  # death string
 
     def screen(self):
         print('\n')
