@@ -46,8 +46,11 @@ class Battlefield:
 
     def screen(self):
         print('\n')
-        print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
-
+        # Team names
+        team_str_1 = self.teams[0].name + self.space(self.teams[0].name, length=25) + 'stats'
+        team_str_2 = self.teams[1].name + self.space(self.teams[1].name, length=25) + 'stats'
+        print(team_str_1 + self.space(team_str_1) + team_str_2)
+        # Team members
         for i in range(Team.SIZE):
             ship_1, ship_2 = self.teams[0].ships[i], self.teams[1].ships[i]
             string_1, string_2 = self.ship_field(ship_1), self.ship_field(ship_2)
