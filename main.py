@@ -43,7 +43,7 @@ class Battlefield:
             ship_bars = armor_bar + self.space(armor_bar, length=6) + health_bar
             return ship.name + space_ship_field + ship_bars
         elif not ship:
-            return Fore.LIGHTBLACK_EX + '*' * 10 + '-' * 6 + '\\' * 16 + Style.RESET_ALL  # death string
+            return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 16 + Style.RESET_ALL  # death string
 
     def screen(self):
         print('\n')
@@ -52,7 +52,7 @@ class Battlefield:
         team_str_2 = self.teams[1].name + self.space(self.teams[1].name, length=25) + 'stats'
         print(team_str_1 + self.space(team_str_1) + team_str_2)
         # Team members
-        for i in range(5):
+        for i in range(Team.SIZE):
             ship_1, ship_2 = self.teams[0].ships[i], self.teams[1].ships[i]
             string_1, string_2 = self.ship_field(ship_1), self.ship_field(ship_2)
 
