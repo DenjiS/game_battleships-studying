@@ -90,6 +90,7 @@ class Battlefield:
         self.clear_screen()
         print(f'\n{winner.name} is winner')
         self.screen()
+        print('\nFINISH')
 
     def main(self):
         """Launches all threads"""
