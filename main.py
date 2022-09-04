@@ -32,22 +32,25 @@ class Battlefield:
         os.system('cls' if os.name == 'nt' else 'clear')
 
     @classmethod
-    def space(cls, obj):
-        return ' ' * (65 - len(obj))
+    def space(cls, obj, length=65, symbol=' '):
+        return symbol * (length - len(obj))
 
-    @classmethod
-    def ship_field(cls, ship):
+    def ship_field(self, ship):
         if ship:
-            space_ship_field = 25 - len(ship.name)
-            ship_bars = f'AR:{ship.armor}_HP:{ship.health}\\{ship.MAX_HEALTH}'
-            return ship.name + '_' * space_ship_field + ship_bars
+
+            space_ship_field = self.space(ship.name, length=25, symbol='_')
+            armor_bar, health_bar = f'AR:{ship.armor}', f'HP:{ship.health}\\{ship.MAX_HEALTH}'
+            ship_bars = armor_bar + self.space(armor_bar, length=6) + health_bar
+            return ship.name + space_ship_field + ship_bars
         elif not ship:
-            return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 8 + Style.RESET_ALL  # death string
+            return Fore.LIGHTBLACK_EX + '*' * 10 + '-' * 6 + '\\' * 16 + Style.RESET_ALL  # death string
 
     def screen(self):
         print('\n')
         # Team names
-        print(self.teams[0].name + self.space(self.teams[0].name) + self.teams[1].name)
+        team_str_1 = self.teams[0].name + self.space(self.teams[0].name, length=25) + 'stats'
+        team_str_2 = self.teams[1].name + self.space(self.teams[1].name, length=25) + 'stats'
+        print(team_str_1 + self.space(team_str_1) + team_str_2)
         # Team members
         for i in range(Team.SIZE):
             ship_1, ship_2 = self.teams[0].ships[i], self.teams[1].ships[i]
