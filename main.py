@@ -2,7 +2,6 @@ from objects.ships import *
 from time import sleep
 from colorama import Fore, Style
 import os
-from adds import print_time_passed
 
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
