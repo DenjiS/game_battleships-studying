@@ -3,6 +3,8 @@ from adds import print_time_passed
 from time import sleep
 from colorama import Fore, Style
 import os
+from time import sleep
+from concurrent.futures import ThreadPoolExecutor
 
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
@@ -58,47 +60,53 @@ class Battlefield:
 
             print(string_1 + self.space(string_1) + string_2)
 
-    def battle_gen(self):
-        cursor = 0
-        while self.teams[0].size > 0 and self.teams[1].size > 0:
-            num = int(cursor / 2)
-            team = cursor % 2
-            next_ship = self.teams[team].ships[num]
-            if next_ship:
-                enemy_team = self.teams[1] if next_ship.team == self.teams[0] else self.teams[0]
-                yield next_ship, enemy_team
-            else:
-                yield None, None
-            if cursor == 9:
-                cursor = 0
-            else:
-                cursor += 1
+    # Threads
+    def screen_thread(self):
+        while self.running:
+            self.clear_screen()
+            self.screen()
+            sleep(2.5)
 
-    def endgame(self):
+    def actions_thread(self, ship, team_enemy):
+        while ship.health > 0 and self.running:
+            if team_enemy.size > 0:
+                ship.actions(team_enemy=team_enemy)
+                sleep(ship.reload)
+            else:
+                self.endgame(ship.team)
+
+    def timer_thread(self):
+        s = 0
+        m = 0
+        while s <= 60 and self.running:
+            print(f'{m}:0{s}') if s < 10 else print(f'{m}:{s}')
+            sleep(1)
+            s += 1
+            if s == 60:
+                m += 1
+                s = 0
+
+    def endgame(self, winner):
+        """Stops the game"""
         self.running = False
         self.clear_screen()
-        winner = self.teams[0] if any(self.teams[0].ships) else self.teams[1]
         print(f'\n{winner.name} is winner')
         self.screen()
         print('\nFINISH')
 
     @print_time_passed
-    def mainloop(self):
-        gen = self.battle_gen()
-        while self.running:
-            self.clear_screen()
-            self.screen()
-            sleep(0.5)
-            try:
-                ship, enemy_team = next(gen)
-                if ship:
-                    ship.actions(enemy_team)
-
-            except StopIteration:
-                self.endgame()
+    def main(self):
+        """Launches all threads"""
+        with ThreadPoolExecutor(max_workers=12) as ex:
+            ex.submit(self.screen_thread)
+            ex.submit(self.timer_thread)
+            for team in self.teams:
+                team_enemy = self.teams[1] if team == self.teams[0] else self.teams[0]
+                for ship in team.ships:
+                    ex.submit(self.actions_thread, ship, team_enemy)
 
 
 if __name__ == '__main__':
     team_red, team_blue = Team('RED', Fore.RED), Team('BLUE', Fore.BLUE)
     btf = Battlefield(team_red, team_blue)
-    btf.mainloop()
+    btf.main()
