@@ -19,7 +19,6 @@ class Weapon:
         self.cd_count = 0
         self.dmg = dmg
 
-    @print_time_passed
     def shoot(self, ship, target, cd=5):
         if target:
 
