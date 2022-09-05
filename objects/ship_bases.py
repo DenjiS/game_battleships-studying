@@ -10,7 +10,7 @@ class Ship(abc.ABC):
         self.team = team
         self.num = num
         self.name = team.color + self.__class__.__name__ + f'_{num}' + Style.RESET_ALL
-        self.health = self.MAX_HEALTH
+        self.health = Health(self.MAX_HEALTH)
         self.armor = self.MAX_ARMOR
 
     @print_time_passed

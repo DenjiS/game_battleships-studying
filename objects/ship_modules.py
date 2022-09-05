@@ -1,3 +1,18 @@
+# Base modules
+class Health:
+    def __init__(self, max_hp):
+        self.health = max_hp
+
+    def __set__(self, instance, value):
+        if value <= 0:
+            instance.team.ships[instance.num] = None
+        else:
+            self.health = value
+
+    def __get__(self, instance, owner):
+        return self.health
+
+
 # Battle modules
 class Weapon:
     def __init__(self, dmg):
