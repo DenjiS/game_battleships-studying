@@ -1,4 +1,6 @@
 from objects.ships import *
+from adds import print_time_passed
+from time import sleep
 from colorama import Fore, Style
 import os
 import asyncio
@@ -92,6 +94,7 @@ class Battlefield:
         self.screen()
         print(f'\nFINISH')
 
+    @print_time_passed
     async def main(self):
         """Gathers all coroutines together"""
         screen_cr = asyncio.create_task(self.screen_coroutine())
