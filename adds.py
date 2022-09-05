@@ -1,4 +1,4 @@
-from time import time, strftime
+from time import time
 
 
 def print_time_passed(func):
