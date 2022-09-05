@@ -1,7 +1,8 @@
 from objects.ship_modules import *
 from colorama import Style
 from random import random, choice
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
+from adds import print_time_passed
 
 
 class Ship(ABC):
@@ -13,6 +14,8 @@ class Ship(ABC):
         self.armor = self.MAX_ARMOR
         self.reload = 0  # sum of reloads of all modules
 
+
+    @print_time_passed
     @abstractmethod
     def actions(self): self.reload = 0
 
