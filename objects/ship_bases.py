@@ -14,7 +14,6 @@ class Ship(ABC):
         self.armor = self.MAX_ARMOR
         self.reload = 0  # sum of reloads of all modules
 
-
     @print_time_passed
     @abstractmethod
     def actions(self): self.reload = 0
