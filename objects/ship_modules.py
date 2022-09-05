@@ -1,16 +1,16 @@
 # Base modules
 class Health:
-    def __init__(self, max_hp):
-        self.health = max_hp
-
     def __set__(self, instance, value):
-        if value <= 0:
+        if value <= 0:  # death of the ship
+            instance._health = 0
             instance.team.ships[instance.num] = None
+            instance.team.size -= 1
+            print(f'{instance.name} destroyed')
         else:
-            self.health = value
+            instance._health = value
 
     def __get__(self, instance, owner):
-        return self.health
+        return instance._health
 
 
 # Battle modules
@@ -23,7 +23,7 @@ class Weapon:
         if target:
 
             # Damage
-            target.health = target.health - (self.dmg - target.armor)
+            target.health -= (self.dmg - target.armor)
             print(f'{ship.name} : shoot --> {target.name}')
 
             # Armor reduction -- ability
@@ -31,12 +31,6 @@ class Weapon:
                 target.armor = target.armor - 1
                 print(f'{ship.name} : break_armor --> {target.name}')
                 self.cd_count = cd + 1  # ability cooldown
-
-            # Kill
-            if target.health <= 0:
-                target.team.ships[target.num] = None
-                target.team.size -= 1
-                print(f'{target.name} destroyed')
 
             # Miss
         else:
