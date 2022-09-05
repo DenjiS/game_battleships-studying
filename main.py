@@ -2,6 +2,7 @@ from objects.ships import *
 from time import sleep
 from colorama import Fore, Style
 import os
+from adds import print_time_passed
 
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
@@ -44,6 +45,7 @@ class Battlefield:
         elif not ship:
             return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 16 + Style.RESET_ALL  # death string
 
+    @print_time_passed
     def screen(self):
         print('\n')
         # Team names
