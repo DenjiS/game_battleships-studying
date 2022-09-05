@@ -1,9 +1,13 @@
+from adds import print_time_passed
+
+
 # Battle modules
 class Weapon:
     def __init__(self, dmg):
         self.cd_count = 0
         self.dmg = dmg
 
+    @print_time_passed
     def shoot(self, ship, target, cd=5):
         if target:
 

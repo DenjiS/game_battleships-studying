@@ -2,6 +2,7 @@ from objects.ship_modules import *
 from colorama import Style
 from random import random, choice
 import abc
+from adds import print_time_passed
 
 
 class Ship(abc.ABC):
@@ -12,6 +13,7 @@ class Ship(abc.ABC):
         self.health = self.MAX_HEALTH
         self.armor = self.MAX_ARMOR
 
+    @print_time_passed
     @abc.abstractmethod
     def actions(self, *args): pass
 
