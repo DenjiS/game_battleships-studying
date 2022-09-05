@@ -1,4 +1,5 @@
 from objects.ships import *
+from adds import print_time_passed
 from time import sleep
 from colorama import Fore, Style
 import os
@@ -81,6 +82,7 @@ class Battlefield:
         self.screen()
         print('\nFINISH')
 
+    @print_time_passed
     def mainloop(self):
         gen = self.battle_gen()
         while self.running:
