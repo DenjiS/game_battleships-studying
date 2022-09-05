@@ -3,6 +3,7 @@ from adds import print_time_passed
 from time import sleep
 from colorama import Fore, Style
 import os
+import asyncio
 
 ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
 
@@ -38,6 +39,7 @@ class Battlefield:
 
     def ship_field(self, ship):
         if ship:
+
             space_ship_field = self.space(ship.name, length=25, symbol='_')
             armor_bar, health_bar = f'AR:{ship.armor}', f'HP:{ship.health}\\{ship.MAX_HEALTH}'
             ship_bars = armor_bar + self.space(armor_bar, length=6) + health_bar
@@ -58,47 +60,55 @@ class Battlefield:
 
             print(string_1 + self.space(string_1) + string_2)
 
-    def battle_gen(self):
-        cursor = 0
-        while self.teams[0].size > 0 and self.teams[1].size > 0:
-            num = int(cursor / 2)
-            team = cursor % 2
-            next_ship = self.teams[team].ships[num]
-            if next_ship:
-                enemy_team = self.teams[1] if next_ship.team == self.teams[0] else self.teams[0]
-                yield next_ship, enemy_team
-            else:
-                yield None, None
-            if cursor == 9:
-                cursor = 0
-            else:
-                cursor += 1
-
-    def endgame(self):
-        self.running = False
-        self.clear_screen()
-        winner = self.teams[0] if any(self.teams[0].ships) else self.teams[1]
-        print(f'\n{winner.name} is winner')
-        self.screen()
-        print('\nFINISH')
-
-    @print_time_passed
-    def mainloop(self):
-        gen = self.battle_gen()
+    # Coroutines
+    async def screen_coroutine(self):
         while self.running:
             self.clear_screen()
             self.screen()
-            sleep(0.5)
-            try:
-                ship, enemy_team = next(gen)
-                if ship:
-                    ship.actions(enemy_team)
+            await asyncio.sleep(2.5)
 
-            except StopIteration:
-                self.endgame()
+    async def actions_coroutine(self, ship, team_enemy):
+        while ship.health > 0 and self.running:
+            if team_enemy.size > 0:
+                ship.actions(team_enemy=team_enemy)
+                await asyncio.sleep(ship.reload)
+            else:
+                self.endgame(ship.team)
+
+    async def timer_coroutine(self):
+        s = 0
+        m = 0
+        while s <= 60 and self.running:
+            print(f'{m}:0{s}') if s < 10 else print(f'{m}:{s}')
+            await asyncio.sleep(1)
+            s += 1
+            if s == 60:
+                m += 1
+                s = 0
+
+    def endgame(self, winner):
+        """Stops the game"""
+        self.running = False
+        self.clear_screen()
+        print(f'\n{winner.name} is winner')
+        self.screen()
+        print(f'\nFINISH')
+
+    @print_time_passed
+    async def main(self):
+        """Gathers all coroutines together"""
+        screen_cr = asyncio.create_task(self.screen_coroutine())
+        timer_cr = asyncio.create_task(self.timer_coroutine())
+        coroutines = [screen_cr, timer_cr]
+        for team in self.teams:
+            enemy_team = self.teams[1] if team == self.teams[0] else self.teams[0]
+            for ship in team.ships:
+                actions_cr = asyncio.create_task(self.actions_coroutine(ship, enemy_team))
+                coroutines.append(actions_cr)
+        await asyncio.gather(*coroutines)
 
 
 if __name__ == '__main__':
     team_red, team_blue = Team('RED', Fore.RED), Team('BLUE', Fore.BLUE)
     btf = Battlefield(team_red, team_blue)
-    btf.mainloop()
+    asyncio.run(btf.main())
