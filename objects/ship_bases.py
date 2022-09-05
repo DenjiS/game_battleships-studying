@@ -1,11 +1,11 @@
 from objects.ship_modules import *
 from colorama import Style
 from random import random, choice
-import abc
+from abc import ABC, abstractmethod
 from adds import print_time_passed
 
 
-class Ship(abc.ABC):
+class Ship(ABC):
     def __init__(self, team, num):
         self.team = team
         self.num = num
@@ -14,7 +14,7 @@ class Ship(abc.ABC):
         self.armor = self.MAX_ARMOR
 
     @print_time_passed
-    @abc.abstractmethod
+    @abstractmethod
     def actions(self, *args): pass
 
 

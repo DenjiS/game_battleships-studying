@@ -45,7 +45,6 @@ class Battlefield:
         elif not ship:
             return Fore.LIGHTBLACK_EX + '*' * 10 + '_' * 6 + '\\' * 16 + Style.RESET_ALL  # death string
 
-    @print_time_passed
     def screen(self):
         print('\n')
         # Team names
