@@ -94,7 +94,6 @@ class Battlefield:
         self.screen()
         print(f'\nFINISH')
 
-    @print_time_passed
     async def main(self):
         """Gathers all coroutines together"""
         screen_cr = asyncio.create_task(self.screen_coroutine())
@@ -108,7 +107,12 @@ class Battlefield:
         await asyncio.gather(*coroutines)
 
 
+@print_time_passed
+def run_with_timer(main):
+    asyncio.run(main)
+
+
 if __name__ == '__main__':
     team_red, team_blue = Team('RED', Fore.RED), Team('BLUE', Fore.BLUE)
     btf = Battlefield(team_red, team_blue)
-    asyncio.run(btf.main())
+    run_with_timer(btf.main())
