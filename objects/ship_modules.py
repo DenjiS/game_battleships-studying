@@ -17,7 +17,7 @@ class Health:
 
 class Armor:
     def __set__(self, instance, value):
-        if value < 0:  # death of the ship
+        if value < 0:
             instance._armor = 0
         elif value > instance.MAX_ARMOR:
             instance._armor = instance.MAX_ARMOR
