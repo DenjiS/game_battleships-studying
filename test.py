@@ -42,7 +42,7 @@ class ShootTest(TestCase):
         ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
         shooter_list = (i for i in ship_types_list if hasattr(i(self.team1, 0), 'weapon'))
         for shooter in shooter_list:
-            custom_log(f'SHOOTER: {shooter.__class__.__name__}')  # log
+            custom_log(f'SHOOTER: {self.team1.ships[0].__class__.__name__}')  # log
             for target in ship_types_list:
                 self.team1.ships[0], self.team2.ships[0] = shooter(self.team1, 0), target(self.team2, 0)
                 custom_log(
