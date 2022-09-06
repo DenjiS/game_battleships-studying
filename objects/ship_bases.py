@@ -7,13 +7,15 @@ from adds import print_time_passed
 
 class Ship(ABC):
     health = Health()
+    armor = Armor()
 
     def __init__(self, team, num):
         self.team = team
         self.num = num
         self.name = team.color + self.__class__.__name__ + f'_{num}' + Style.RESET_ALL
-        self.armor = self.MAX_ARMOR
+        self.MAX_ARMOR = self.INIT_ARMOR + 5
         self._health = self.MAX_HEALTH
+        self._armor = self.INIT_ARMOR
 
     @print_time_passed
     @abstractmethod
