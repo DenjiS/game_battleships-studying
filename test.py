@@ -29,6 +29,8 @@ class ShootTest(TestCase):
         for i in range(shots_needed):
             shooter.shoot(target)
             expected_health = target.MAX_HEALTH - (shooter.DAMAGE * (i + 1))
+            if expected_health < 0:
+                expected_health = 0
             self.assertEqual(expected_health, target.health,
                              msg=f'{shooter.name} -> {target.name} target HP must be {expected_health} after {i + 1} shot')
         self.assertEqual(None, self.team2.ships[0],
@@ -40,10 +42,11 @@ class ShootTest(TestCase):
         ship_types_list = [Jet, HeavyJet, Cruiser, CargoShip, RepairShip]
         shooter_list = (i for i in ship_types_list if hasattr(i(self.team1, 0), 'weapon'))
         for shooter in shooter_list:
-            custom_log(f'SHOOTER: {shooter.CLS_NAME}')  # log
+            custom_log(f'SHOOTER: {self.team1.ships[0].__class__.__name__}')  # log
             for target in ship_types_list:
                 self.team1.ships[0], self.team2.ships[0] = shooter(self.team1, 0), target(self.team2, 0)
-                custom_log(self.team1.ships[0].CLS_NAME + ' -> ' + self.team2.ships[0].CLS_NAME)  # log
+                custom_log(
+                    self.team1.ships[0].__class__.__name__ + ' -> ' + self.team2.ships[0].__class__.__name__)  # log
                 self.test_kill()
 
 
